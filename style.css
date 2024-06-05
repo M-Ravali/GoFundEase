@@ -13,3 +13,14 @@ body {
 .navbar-brand {
     font-size: 1.5rem;
 }
+
+.nav-link{
+    padding: .5rem 1rem;
+    margin-right: 25px;
+    font-size: large;
+    font-weight: 100px;
+}
+
+.nav-link:hover{
+    color: green;
+}
