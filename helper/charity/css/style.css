@@ -1089,7 +1089,7 @@ blockquote::before {
 .input-group-file {
   background-color: var(--section-bg-color);
   box-shadow: none;
-  border: 0;
+  /*border: 0;*/
   color: var(--p-color);
   margin-bottom: 24px;
   padding-top: 13px;
