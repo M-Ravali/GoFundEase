@@ -43,23 +43,23 @@
                     <div class="col-lg-3 col-12 ms-auto d-lg-block d-none">
                         <ul class="social-icon">
                             <li class="social-icon-item">
-                                <a href="https://www.twitter.com" class="social-icon-link bi-twitter" target="_blank"></a>
+                                <a href="#" class="social-icon-link bi-twitter"></a>
                             </li>
 
                             <li class="social-icon-item">
-                                <a href=https://www.facebook.com class="social-icon-link bi-facebook" target="_blank"></a>
+                                <a href="#" class="social-icon-link bi-facebook"></a>
                             </li>
 
                             <li class="social-icon-item">
-                                <a href="https://www.instagram.com" class="social-icon-link bi-instagram" target="_blank"></a>
+                                <a href="#" class="social-icon-link bi-instagram"></a>
                             </li>
 
                             <li class="social-icon-item">
-                                <a href="https://www.youtube.com" class="social-icon-link bi-youtube" target="_blank"></a>
+                                <a href="#" class="social-icon-link bi-youtube"></a>
                             </li>
 
                             <li class="social-icon-item">
-                                <a href="httPs://www.whatsapp.com" class="social-icon-link bi-whatsapp" target="_blank"></a>
+                                <a href="#" class="social-icon-link bi-whatsapp"></a>
                             </li>
                         </ul>
                     </div>
@@ -298,13 +298,18 @@
                 </div>
             </section>
 
+
             <section class="about-section section-padding">
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-6 col-md-5 col-12">
-                            <h2>Create a Campaign</h2>
+                            <img src="images/getty_185462049_970646970450095_47050.jpg" class="about-image ms-lg-auto bg-light shadow-lg img-fluid" alt="" width="5052" length="1052">
+                        </div>
+            
+                        <div class="col-lg-5 col-md-7 col-12">
                             <div class="custom-text-block">
-                                <form action="submit_campaign.php" method="post" enctype="multipart/form-data" id="campaignForm">
+                                <h2 class="mb-4">Create a Campaign</h2>
+                                <form action="submit_campaign.php" method="post" enctype="multipart/form-data">
                                     <div class="form-group">
                                         <label for="campaignTitle">Campaign Title</label>
                                         <input type="text" class="form-control" id="campaignTitle" name="campaignTitle" required>
@@ -338,65 +343,22 @@
                                 </form>
                             </div>
                         </div>
-                        <div class="col-lg-6 col-md-5 col-12">
-                            <h2>Uploaded Campaign</h2>
-                            <div id="uploadedCampaign">
-                                <!-- The uploaded campaign will be displayed here -->
-                            </div>
-                        </div>
                     </div>
                 </div>
             </section>
-        
-            <!-- JavaScript code -->
+            
             <script>
-                // Example campaign data (initially empty)
-                let uploadedCampaignData = {};
-        
-                // Function to display uploaded campaign
-                function displayUploadedCampaign() {
-                    const uploadedCampaignContainer = document.getElementById("uploadedCampaign");
-                    uploadedCampaignContainer.innerHTML = "";
-        
-                    if (Object.keys(uploadedCampaignData).length === 0) {
-                        uploadedCampaignContainer.innerHTML = "<p>No campaign uploaded yet.</p>";
-                        return;
-                    }
-        
-                    // Display campaign details
-                    uploadedCampaignContainer.innerHTML = `
-                        <h3>${uploadedCampaignData.title}</h3>
-                        <p>${uploadedCampaignData.description}</p>
-                        <img src="${uploadedCampaignData.image}" alt="Campaign Image">
-                        <video controls>
-                            <source src="${uploadedCampaignData.video}" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                    `;
-                }
-        
-                // On form submission, prevent default form submission behavior and update uploadedCampaignData
-                document.getElementById("campaignForm").addEventListener("submit", function(event) {
-                    event.preventDefault();
-        
-                    // Retrieve form data
-                    const formData = new FormData(this);
-        
-                    // Store form data in uploadedCampaignData
-                    uploadedCampaignData = {
-                        title: formData.get("campaignTitle"),
-                        description: formData.get("campaignDescription"),
-                        image: URL.createObjectURL(formData.get("campaignImage")),
-                        video: formData.get("campaignVideo") ? URL.createObjectURL(formData.get("campaignVideo")) : ""
-                    };
-        
-                    // Display the uploaded campaign
-                    displayUploadedCampaign();
-                });
+            document.getElementById('shareToSocialMedia').addEventListener('click', function(event) {
+                event.preventDefault();
+                var campaignTitle = document.getElementById('campaignTitle').value;
+                var campaignDescription = document.getElementById('campaignDescription').value;
+                var shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(campaignTitle + ": " + campaignDescription);
+                window.open(shareUrl, '_blank');
+            });
             </script>
-      
-                       
-        
+            
+
+                   
 
             <section class="cta-section section-padding section-bg">
                 <div class="container">
@@ -433,7 +395,7 @@
                                     <div class="custom-block-body">
                                         <h5 class="mb-3">Children Education</h5>
 
-                                        <p>Lorem Ipsum dolor sit amet, consectetur adipsicing kengan omeg kohm tokito</p>
+                                        <p>We have been able to support children's education in developing countries.</p>
 
                                         <div class="progress mt-4">
                                             <div class="progress-bar w-75" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
@@ -465,8 +427,7 @@
                                     <div class="custom-block-body">
                                         <h5 class="mb-3">Poverty Development</h5>
 
-                                        <p>Sed leo nisl, posuere at molestie ac, suscipit auctor mauris. Etiam quis metus tempor</p>
-
+                                        <p>Our passion is to help reduce poverty through GoFundEase, all over the world.</p>
                                         <div class="progress mt-4">
                                             <div class="progress-bar w-50" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
@@ -497,7 +458,7 @@
                                     <div class="custom-block-body">
                                         <h5 class="mb-3">Supply drinking water</h5>
 
-                                        <p>Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus</p>
+                                        <p>Provision of Affordable clean water is one of our core priorities.</p>
 
                                         <div class="progress mt-4">
                                             <div class="progress-bar w-100" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
