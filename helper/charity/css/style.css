@@ -671,9 +671,12 @@ strong {
 .about-image {
   border-radius: var(--border-radius-medium);
   display: block;
-  width: 350px;
+  width: 500px;
   height: 400px;
   object-fit: cover;
+}
+#share-social-media{
+  display: inline-block;
 }
 
 .custom-text-block {
@@ -1086,7 +1089,7 @@ blockquote::before {
 .input-group-file {
   background-color: var(--section-bg-color);
   box-shadow: none;
-  border: 0;
+  /*border: 0;*/
   color: var(--p-color);
   margin-bottom: 24px;
   padding-top: 13px;
