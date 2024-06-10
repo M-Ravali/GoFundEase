@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - GoFundEase</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: url('background1.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        .login-container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(67, 239, 5, 0.728);
+            max-width: 400px;
+            width: 100%;
+        }
+        .login-container h2 {
+            margin-bottom: 1.5rem;
+        }
+        .login-container .quotation {
+            font-style: italic;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #555555;
+            font-weight: bold;
+            font-family: 'Arial Black', Gadget, sans-serif; /* Example font-family */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Example text-shadow */
+            /* Add any other decoration properties you like */
+        }
+
+        .navbar {
+            
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            color: #0bef6e;
+            font-weight: bold;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="index.html">GoFundEase</a>
+    </nav>
+
+    <div class="login-container">
+        <div class="quotation">"The best way to find yourself is to lose yourself in the service of others." - Mahatma Gandhi</div>
+        <h2>Login</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email address</label>
+                <input type="email" class="form-control" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Login</button>
+        </form>
+        <li class="nav-item">
+            <a class="nav-link" href="register.html">   New User? Create Account </a>
+        </li>
+    </div>
+
+    <script>
+        // Function to get query parameters
+        function getQueryParams() {
+            const params = {};
+            const queryString = window.location.search.substring(1);
+            const regex = /([^&=]+)=([^&]*)/g;
+            let m;
+            while (m = regex.exec(queryString)) {
+                params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+            }
+            return params;
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            // Assuming login validation is successful
+            const queryParams = getQueryParams();
+            const redirectUrl = queryParams['redirect'] || 'index.html';
+            // Redirect to the specified page after login
+            window.location.href = redirectUrl;
+        });
+    </script>
+</body>
+</html>
