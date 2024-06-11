@@ -3,6 +3,8 @@ const connectDB = require('./config/db');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/auth');
 const campaignRoutes = require('./routes/campaign');
+const stripeRoutes = require('./routes/stripe');
+const donationRoutes = require('./routes/donation');
 const cors = require('cors');
 
 dotenv.config();
@@ -18,7 +20,10 @@ app.use(cors());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/campaign', campaignRoutes);
-   
-const PORT = process.env.PORT || 5000;  
+app.use('/api/stripe', stripeRoutes);
+app.use('/api/donations', donationRoutes);
+
+  
+const PORT = process.env.PORT || 6000;  
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));             
