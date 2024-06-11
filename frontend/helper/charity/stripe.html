@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stripe Payment</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    .container {
+      max-width: 500px;
+      margin-top: 50px;
+    }
+    /* Override the default Stripe invalid style */
+    .StripeElement--invalid {
+      color: #000000 !important;
+    }
+    .invalid-feedback {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 class="text-center">Pay with card</h2>
+    <form id="payment-form">
+      <div class="mb-3">
+        <label for="card-element" class="form-label">Card Number</label>
+        <div id="card-element" class="form-control">
+          <!-- A Stripe Element will be inserted here. -->
+        </div>
+        <div id="card-errors" class="invalid-feedback">
+          This card number is not valid.
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="postal-code" class="form-label">Postal Code</label>
+        <input type="text" id="postal-code" class="form-control" required>
+      </div>
+      <button id="submit" class="btn btn-primary w-100">Pay</button>
+    </form>
+    <div id="payment-result" class="alert alert-success mt-3 d-none">
+      Payment succeeded!
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const stripe = Stripe('your-publishable-key-here');
+      const elements = stripe.elements();
+      const cardElement = elements.create('card');
+      cardElement.mount('#card-element');
+
+      const form = document.getElementById('payment-form');
+      const resultContainer = document.getElementById('payment-result');
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        try {
+          const { clientSecret } = await fetch('http://localhost:6000/api/stripe/create-payment-intent', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              amount: 5000 // Example amount in cents ($50.00)
+            })
+          }).then(response => response.json());
+
+          // Simulate success regardless of card details for now
+          const mockSuccess = true;
+
+          if (mockSuccess) {
+            resultContainer.classList.remove('d-none');
+            resultContainer.classList.remove('alert-danger');
+            resultContainer.classList.add('alert-success');
+            resultContainer.textContent = 'Payment succeeded!';
+          } else {
+            const { error } = await stripe.confirmCardPayment(clientSecret, {
+              payment_method: {
+                card: cardElement,
+                billing_details: {
+                  address: {
+                    postal_code: document.getElementById('postal-code').value,
+                  },
+                },
+              },
+            });
+
+            if (error) {
+              resultContainer.classList.remove('d-none');
+              resultContainer.classList.add('alert-danger');
+              resultContainer.textContent = `Payment failed: ${error.message}`;
+            } else {
+              resultContainer.classList.remove('d-none');
+              resultContainer.classList.remove('alert-danger');
+              resultContainer.classList.add('alert-success');
+              resultContainer.textContent = 'Payment succeeded!';
+            }
+          }
+        } catch (error) {
+          resultContainer.classList.remove('d-none');
+          resultContainer.classList.add('alert-danger');
+          resultContainer.textContent = `Payment failed: ${error.message}`;
+        }
+      });
+    });
+  </script>
+</body>
+</html>

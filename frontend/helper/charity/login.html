@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Register - GoFundEase</title>
+    <title>Login - GoFundEase</title>
     <!-- CSS FILES -->
     <link href="css/bootstrap.min.css" rel="stylesheet" />
     <link href="css/bootstrap-icons.css" rel="stylesheet" />
@@ -17,8 +17,7 @@
         <div class="row">
           <div class="col-lg-8 col-12 d-flex flex-wrap">
             <p class="d-flex me-4 mb-0">
-              <i class="bi-geo-alt me-2"></i>
-              20 North Grand, Saint Louis, Missouri, USA
+              <i class="bi-geo-alt me-2"></i> 20 North Grand, Saint Louis,Missouri, USA
             </p>
             <p class="d-flex mb-0">
               <i class="bi-envelope me-2"></i>
@@ -89,7 +88,7 @@
               <a class="nav-link" href="index.html">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="login.html">Login</a>
+              <a class="nav-link" href="register.html">Register</a>
             </li>
           </ul>
         </div>
@@ -101,18 +100,8 @@
           <div class="row">
             <div class="col-lg-6 mx-auto">
               <div class="login-form">
-                <h2>Register to GoFundEase</h2>
-                <form id="registerForm">
-                  <div class="form-group">
-                    <label for="name">Name</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="name"
-                      name="name"
-                      required
-                    />
-                  </div>
+                <h2>Login to GoFundEase</h2>
+                <form id="loginForm">
                   <div class="form-group">
                     <label for="email">Email</label>
                     <input
@@ -134,22 +123,15 @@
                     />
                   </div>
                   <button type="submit" class="btn btn-primary mt-3">
-                    Register
+                    Login
                   </button>
                 </form>
                 <p
-                  id="registerError"
+                  id="loginError"
                   class="text-danger mt-3"
                   style="display: none"
                 >
-                  Registration failed
-                </p>
-                <p
-                  id="registerSuccess"
-                  class="text-success mt-3"
-                  style="display: none"
-                >
-                  Registration successful! Redirecting to login page...
+                  Login failed
                 </p>
               </div>
             </div>
@@ -157,38 +139,6 @@
         </div>
       </section>
     </main>
-    <!-- JavaScript for registration form validation -->
-    <script>
-      document
-        .getElementById("registerForm")
-        .addEventListener("submit", function (event) {
-          event.preventDefault();
-          const name = document.getElementById("name").value;
-          const email = document.getElementById("email").value;
-          const password = document.getElementById("password").value;
-
-          // Basic client-side validation
-          if (name === "" || email === "" || password === "") {
-            document.getElementById("registerError").textContent =
-              "All fields are required.";
-            document.getElementById("registerError").style.display = "block";
-            return;
-          }
-
-          // Mock registration logic
-          if (email === "existing@example.com") {
-            document.getElementById("registerError").textContent =
-              "Email already registered.";
-            document.getElementById("registerError").style.display = "block";
-          } else {
-            document.getElementById("registerError").style.display = "none";
-            document.getElementById("registerSuccess").style.display = "block";
-            // Simulate a successful registration and redirect to login page
-            setTimeout(() => {
-              window.location.href = "login.html";
-            }, 2000);
-          }
-        });
-    </script>
+    <script src="main.js"></script>
   </body>
 </html>

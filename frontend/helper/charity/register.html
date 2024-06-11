@@ -3,12 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login - GoFundEase</title>
+    <title>Register - GoFundEase</title>
     <!-- CSS FILES -->
     <link href="css/bootstrap.min.css" rel="stylesheet" />
     <link href="css/bootstrap-icons.css" rel="stylesheet" />
     <link href="css/style.css" rel="stylesheet" />
     <link href="css/style1.css" rel="stylesheet" />
+    <link href="css/register.css" rel="stylesheet" />
   </head>
   <body>
     <header class="site-header">
@@ -17,8 +18,8 @@
         <div class="row">
           <div class="col-lg-8 col-12 d-flex flex-wrap">
             <p class="d-flex me-4 mb-0">
-              <i class="bi-geo-alt me-2"></i> 20 North Grand, Saint Louis,
-              Missouri, USA
+              <i class="bi-geo-alt me-2"></i>
+              20 North Grand, Saint Louis, Missouri, USA
             </p>
             <p class="d-flex mb-0">
               <i class="bi-envelope me-2"></i>
@@ -89,7 +90,7 @@
               <a class="nav-link" href="index.html">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="register.html">Register</a>
+              <a class="nav-link" href="login.html">Login</a>
             </li>
           </ul>
         </div>
@@ -101,8 +102,18 @@
           <div class="row">
             <div class="col-lg-6 mx-auto">
               <div class="login-form">
-                <h2>Login to GoFundEase</h2>
-                <form id="loginForm">
+                <h2>Register to GoFundEase</h2>
+                <form id="registerForm">
+                  <div class="form-group">
+                    <label for="name">Name</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="name"
+                      name="name"
+                      required
+                    />
+                  </div>
                   <div class="form-group">
                     <label for="email">Email</label>
                     <input
@@ -123,16 +134,26 @@
                       required
                     />
                   </div>
+                  <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      required
+                    />
+                  </div>
                   <button type="submit" class="btn btn-primary mt-3">
-                    Login
+                    Register
                   </button>
                 </form>
                 <p
-                  id="loginError"
+                  id="registerError"
                   class="text-danger mt-3"
                   style="display: none"
                 >
-                  Login failed
+                  Registration failed
                 </p>
               </div>
             </div>
@@ -140,6 +161,7 @@
         </div>
       </section>
     </main>
+    <!-- JavaScript for registration form validation -->
     <script src="main.js"></script>
   </body>
 </html>
