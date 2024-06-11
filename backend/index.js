@@ -16,6 +16,7 @@ console.log(`JWT_SECRET: ${process.env.JWT_SECRET}`);
 
 app.use(express.json());  
 
+
 app.use(cors());  
 
 app.use('/api/auth', authRoutes);
@@ -27,3 +28,6 @@ app.use('/api/donations', donationRoutes);
 const PORT = process.env.PORT || 6000;  
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));             
+
+// Export the app for testing
+module.exports = app;
