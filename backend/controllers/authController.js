@@ -16,7 +16,7 @@ const generateToken = (id) => {
 exports.registerUser = async (req, res) => {
   const { name, email, password } = req.body;
 
-  try {
+  try { 
     const userExists = await User.findOne({ email });
 
     if (userExists) {
@@ -62,6 +62,8 @@ exports.authUser = async (req, res) => {
 };
 
 
+
+
 exports.requestPasswordReset = async (req, res) => {
   const { email } = req.body;
 
@@ -76,7 +78,7 @@ exports.requestPasswordReset = async (req, res) => {
     const resetTokenExpiry = Date.now() + 3600000; // 1 hour
 
     user.resetPasswordToken = resetToken;
-    user.resetPasswordExpiry = resetTokenExpiry;
+    user.resetPasswordExpiry = resetTokenExpiry;  
 
     await user.save();
 
@@ -108,9 +110,13 @@ exports.requestPasswordReset = async (req, res) => {
   }
 };
 
+
 exports.resetPassword = async (req, res) => {
   const { token } = req.params;
   const { password } = req.body;
+
+  console.log("Received reset password request with token:", token);
+  console.log("Received reset password request with new password:", password);
 
   try {
     const user = await User.findOne({
@@ -119,6 +125,7 @@ exports.resetPassword = async (req, res) => {
     });
 
     if (!user) {
+      console.log("Token is invalid or expired");
       return res.status(400).json({ message: "Invalid or expired token" });
     }
 
@@ -130,6 +137,7 @@ exports.resetPassword = async (req, res) => {
 
     res.status(200).json({ message: 'Password reset successful' });
   } catch (error) {
+    console.error("Error in resetPassword controller:", error);
     res.status(500).json({ message: error.message });
   }
 };
