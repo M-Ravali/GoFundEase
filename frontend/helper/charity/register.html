@@ -9,6 +9,7 @@
     <link href="css/bootstrap-icons.css" rel="stylesheet" />
     <link href="css/style.css" rel="stylesheet" />
     <link href="css/style1.css" rel="stylesheet" />
+    <link href="css/register.css" rel="stylesheet" />
   </head>
   <body>
     <header class="site-header">
@@ -144,13 +145,6 @@
                 >
                   Registration failed
                 </p>
-                <p
-                  id="registerSuccess"
-                  class="text-success mt-3"
-                  style="display: none"
-                >
-                  Registration successful! Redirecting to login page...
-                </p>
               </div>
             </div>
           </div>
@@ -158,37 +152,6 @@
       </section>
     </main>
     <!-- JavaScript for registration form validation -->
-    <script>
-      document
-        .getElementById("registerForm")
-        .addEventListener("submit", function (event) {
-          event.preventDefault();
-          const name = document.getElementById("name").value;
-          const email = document.getElementById("email").value;
-          const password = document.getElementById("password").value;
-
-          // Basic client-side validation
-          if (name === "" || email === "" || password === "") {
-            document.getElementById("registerError").textContent =
-              "All fields are required.";
-            document.getElementById("registerError").style.display = "block";
-            return;
-          }
-
-          // Mock registration logic
-          if (email === "existing@example.com") {
-            document.getElementById("registerError").textContent =
-              "Email already registered.";
-            document.getElementById("registerError").style.display = "block";
-          } else {
-            document.getElementById("registerError").style.display = "none";
-            document.getElementById("registerSuccess").style.display = "block";
-            // Simulate a successful registration and redirect to login page
-            setTimeout(() => {
-              window.location.href = "login.html";
-            }, 2000);
-          }
-        });
-    </script>
+     <script src="main.js"></script>
   </body>
 </html>

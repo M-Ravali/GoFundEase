@@ -143,5 +143,5 @@ function validateEmail(email) {
 
 // redirecting
 function redirectToHome() {
-    window.location.href = 'helper/charity/index.html';
+    window.location.href = "index.html";
 }

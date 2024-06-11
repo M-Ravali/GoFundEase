@@ -53,13 +53,13 @@ body {
 
 /* Button Styles */
 .btn-primary {
-  background-color: #ff5733; /* Primary button color matching index theme */
-  border-color: #ff5733;
+  background-color: #5c33ff; /* Primary button color matching index theme */
+  border-color: #15b1ef;
 }
 
 .btn-primary:hover {
-  background-color: #cc4626; /* Hover color to match index theme */
-  border-color: #cc4626;
+  background-color: #3c2eb5; /* Hover color to match index theme */
+  border-color: #0986d4;
 }
 
 /* Utility Classes */
