@@ -62,29 +62,6 @@ exports.authUser = async (req, res) => {
 };
 
 
-// Get user profile
-exports.getUserProfile = async (req, res) => {
-  try {
-    const user = await User.findById(req.body._id).select('-password');
-    if (user) {
-      res.json(user);
-    } else {
-      res.status(404).json({ message: 'User not found' });
-    }
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-// Get user donation history
-exports.getUserDonations = async (req, res) => {
-  try {
-    const donations = await Donation.find({ user: req.user.id });
-    res.json({ donations });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
 
 
 exports.requestPasswordReset = async (req, res) => {
