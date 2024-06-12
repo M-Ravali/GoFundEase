@@ -60,7 +60,7 @@ describe('Donation Controller', () => {
     it('should return a 500 error if server error occurs', async () => {
       jest.spyOn(Donation.prototype, 'save').mockImplementationOnce(() => {
         throw new Error('Server error');
-      });
+      });  
 
       const donationData = {
         donationFrequency: 'One Time',
