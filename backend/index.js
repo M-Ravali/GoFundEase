@@ -7,6 +7,7 @@ const stripeRoutes = require('./routes/stripe');
 const donationRoutes = require('./routes/donation');
 const cors = require('cors');
 const http = require('http');
+const path = require('path');
 
 dotenv.config();
 connectDB();
@@ -23,6 +24,16 @@ app.use('/api/campaign', campaignRoutes);
 app.use('/api/stripe', stripeRoutes);
 app.use('/api/donations', donationRoutes);
 
+
+// Middleware to serve static files (like your HTML, CSS, and JS)
+app.use(express.static(path.join(__dirname, '../frontend')));
+
+// Route to handle reset password link
+app.get('/reset-password/:token', (req, res) => {
+  const token = req.params.token;
+  // Render the reset password page, passing the token if necessary
+  res.sendFile(path.join(__dirname, '../frontend', 'helper', 'charity', 'resetpassword.html'));
+});
   
 const PORT = process.env.PORT || 5000;  
 
