@@ -290,99 +290,48 @@
                 </div>
             </section>
 
-
-            
+           
             <section class="about-section section-padding">
-                    <div class="container">
-                        <div class="row">
-                            <div class="container">
-                                <div class="section" id="uploadSection">
-                                    <h2>Upload Your Campaign</h2>
-                                    <p><b>Title</b></p>
-                                    <input type="text" id="campaignName" placeholder="Title">
-                                    <p><b>Description</b></p>
-                                    <textarea id="campaignDescription" rows="4" placeholder="Campaign Description"></textarea>
-                                    <p><b>Goal Amount</b></p>
-                                    <input type="number" id="goalAmount" placeholder="$0.00" step="100.00" min="100.00">
-                                    <p><b>Current Amount</b></p>
-                                    <input type="number" id="currentAmount" placeholder="$0.00" step="100.00">
-                                    <input type="file" id="imageUpload" accept="image/png">
-                                    <input type="file" id="videoUpload" accept="video/mp4">
-                                    <button onclick="uploadFiles()">Upload</button>
+                <div class="container">
+                    <div class="row">
+                        <div class="container">
+                            <div class="section" id="uploadSection">
+                                <h2>Upload Your Campaign</h2>
+                                <p><b>Title</b></p>
+                                <input type="text" id="campaignName" placeholder="Title">
+                                <p><b>Description</b></p>
+                                <textarea id="campaignDescription" rows="4" placeholder="Campaign Description"></textarea>
+                                <p><b>Goal Amount</b></p>
+                                <input type="number" id="goalAmount" placeholder="$0.00" step="100.00" min="100.00">
+                                <p><b>Current Amount</b></p>
+                                <input type="number" id="currentAmount" placeholder="$0.00" step="100.00">
+                                <input type="file" id="imageUpload" accept="image/png">
+                                <input type="file" id="videoUpload" accept="video/mp4">
+                                <button onclick="uploadFiles()">Upload</button>
+                            </div>
+                            <div class="section" id="previewSection" style="display:none;">
+                                <h2>Your Campaign Preview</h2>
+                                <div id="campaignInfo">
+                                    <h3 id="previewName"></h3>
+                                    <p id="previewGoalAmount"></p>
+                                    <p id="previewCurrentAmount"></p>
+                                    <p id="previewDescription"></p>
                                 </div>
-                                <div class="section" id="previewSection" style="display:none;">
-                                    <h2>Your Campaign Preview</h2>
-                                    <div id="campaignInfo">
-                                        <h3 id="previewName"></h3>
-                                        <p id="previewGoalAmount"></p>
-                                        <p id="previewCurrentAmount"></p>
-                                        <p id="previewDescription"></p>
-                                    </div>
-                                    <div id="preview">
-                                        <img id="previewImage" style="display:none;">
-                                        <video id="previewVideo" controls style="display:none;"></video>
-                                    </div>
-                                    <div class="social-share">
-                                        <button onclick="shareOnFacebook()">Share on Facebook</button>
-                                        <button onclick="shareOnTwitter()">Share on Twitter</button>
-                                        <button onclick="shareOnInstagram()">Share on instagram</button>
-                                    </div>
+                                <div id="preview">
+                                    <img id="previewImage" style="display:none;">
+                                    <video id="previewVideo" controls style="display:none;"></video>
+                                </div>
+                                <div class="social-share">
+                                    <button onclick="shareOnFacebook()">Share on Facebook</button>
+                                    <button onclick="shareOnTwitter()">Share on Twitter</button>
+                                    <button onclick="shareOnInstagram()">Share on instagram</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </section>
-            
-                <script>
-                    function uploadFiles() {
-                        const campaignName = document.getElementById('campaignName').value;
-                        const campaignAmount = document.getElementById('goalAmount').value;
-                        const campaignDescription = document.getElementById('campaignDescription').value;
-                        const imageUpload = document.getElementById('imageUpload').files[0];
-                        const videoUpload = document.getElementById('videoUpload').files[0];
-            
-                        document.getElementById('previewName').textContent = campaignName;
-                        document.getElementById('previewGoalAmount').textContent = 'Goal Amount: $' + campaignAmount;
-                        document.getElementById('previewDescription').textContent = campaignDescription;
-            
-                        if (imageUpload && imageUpload.type === 'image/png') {
-                            const imagePreview = document.getElementById('previewImage');
-                            imagePreview.src = URL.createObjectURL(imageUpload);
-                            imagePreview.style.display = 'block';
-                        } else {
-                            document.getElementById('previewImage').style.display = 'none';
-                        }
-            
-                        if (videoUpload && videoUpload.type === 'video/mp4') {
-                            const videoPreview = document.getElementById('previewVideo');
-                            videoPreview.src = URL.createObjectURL(videoUpload);
-                            videoPreview.style.display = 'block';
-                        } else {
-                            document.getElementById('previewVideo').style.display = 'none';
-                        }
-            
-                        // Hide uploadSection and show previewSection
-                        document.getElementById('uploadSection').style.display = 'none';
-                        document.getElementById('previewSection').style.display = 'block';
-                    }
-            
-                    function shareOnFacebook() {
-                        const url = window.location.href;
-                        const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
-                        window.open(facebookShareUrl, '_blank');
-                    }
-            
-                    function shareOnTwitter() {
-                        const url = window.location.href;
-                        const text = "Check out this awesome campaign!";
-                        const twitterShareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
-                        window.open(twitterShareUrl, '_blank');
-                    }
-                </script>
-            
-            
-            
-
+                </div>
+            </section>
+        
             <script>
                 function uploadFiles() {
                     const campaignName = document.getElementById('campaignName').value;
@@ -411,15 +360,8 @@
                         document.getElementById('previewVideo').style.display = 'none';
                     }
         
-                    // Clear input fields
-                    document.getElementById('campaignName').value = '';
-                    document.getElementById('campaignDescription').value = '';
-                    document.getElementById('goalAmount').value = '';
-                    document.getElementById('currentAmount').value = '';
-                    document.getElementById('imageUpload').value = '';
-                    document.getElementById('videoUpload').value = '';
-        
-                    // Show previewSection
+                    // Hide uploadSection and show previewSection
+                    document.getElementById('uploadSection').style.display = 'none';
                     document.getElementById('previewSection').style.display = 'block';
                 }
         
@@ -435,9 +377,72 @@
                     const twitterShareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
                     window.open(twitterShareUrl, '_blank');
                 }
+                function shareOnInstagram() {
+                    const url = window.location.href;
+                    const text = "Check out this awesome campaign!";
+                    const instagramShareUrl = `https://instagram.com/intent/share.php?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+                    window.open(instagramShareUrl, '_blank');
+                }
             </script>
+        
+        
+        
 
+        <script>
+            function uploadFiles() {
+                const campaignName = document.getElementById('campaignName').value;
+                const campaignAmount = document.getElementById('goalAmount').value;
+                const campaignDescription = document.getElementById('campaignDescription').value;
+                const imageUpload = document.getElementById('imageUpload').files[0];
+                const videoUpload = document.getElementById('videoUpload').files[0];
+    
+                document.getElementById('previewName').textContent = campaignName;
+                document.getElementById('previewGoalAmount').textContent = 'Goal Amount: $' + campaignAmount;
+                document.getElementById('previewDescription').textContent = campaignDescription;
+    
+                if (imageUpload && imageUpload.type === 'image/png') {
+                    const imagePreview = document.getElementById('previewImage');
+                    imagePreview.src = URL.createObjectURL(imageUpload);
+                    imagePreview.style.display = 'block';
+                } else {
+                    document.getElementById('previewImage').style.display = 'none';
+                }
+    
+                if (videoUpload && videoUpload.type === 'video/mp4') {
+                    const videoPreview = document.getElementById('previewVideo');
+                    videoPreview.src = URL.createObjectURL(videoUpload);
+                    videoPreview.style.display = 'block';
+                } else {
+                    document.getElementById('previewVideo').style.display = 'none';
+                }
+    
+                // Clear input fields
+                document.getElementById('campaignName').value = '';
+                document.getElementById('campaignDescription').value = '';
+                document.getElementById('goalAmount').value = '';
+                document.getElementById('currentAmount').value = '';
+                document.getElementById('imageUpload').value = '';
+                document.getElementById('videoUpload').value = '';
+    
+                // Show previewSection
+                document.getElementById('previewSection').style.display = 'block';
+            }
+    
+            function shareOnFacebook() {
+                const url = window.location.href;
+                const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+                window.open(facebookShareUrl, '_blank');
+            }
+    
+            function shareOnTwitter() {
+                const url = window.location.href;
+                const text = "Check out this awesome campaign!";
+                const twitterShareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+                window.open(twitterShareUrl, '_blank');
+            }
+        </script>
 
+            
             
             <section class="cta-section section-padding section-bg">
                 <div class="container">
@@ -933,7 +938,6 @@
                 </div>
             </section>
 
-
             <section class="contact-section section-padding" id="section_6">
                 <div class="container">
                     <div class="row">
@@ -1065,9 +1069,7 @@
             <div class="site-footer-bottom">
                 <div class="container">
                     <div class="row">
-
-                        
-                        
+                                             
                         <div class="col-lg-6 col-md-5 col-12 d-flex justify-content-center align-items-center mx-auto">
                             <ul class="social-icon">
                                 <li class="social-icon-item">
