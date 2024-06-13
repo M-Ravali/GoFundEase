@@ -46,7 +46,7 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const stripe = Stripe('your-publishable-key-here');
+      const stripe = Stripe('STRIPE_PUBLISHABLE_KEY');
       const elements = stripe.elements();
       const cardElement = elements.create('card');
       cardElement.mount('#card-element');
@@ -58,7 +58,7 @@
         event.preventDefault();
 
         try {
-          const { clientSecret } = await fetch('http://localhost:6000/api/stripe/create-payment-intent', {
+          const { clientSecret } = await fetch('http://localhost:8080/api/stripe/create-payment-intent', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
