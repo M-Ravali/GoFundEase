@@ -38,6 +38,7 @@
         <input type="text" id="postal-code" class="form-control" required>
       </div>
       <button id="submit" class="btn btn-primary w-100">Pay</button>
+      <button id="back" class="btn btn-secondary w-100 mt-2" onclick="goBack()">Back</button>
     </form>
     <div id="payment-result" class="alert alert-success mt-3 d-none">
       Payment succeeded!
@@ -104,6 +105,10 @@
         }
       });
     });
+
+    function goBack() {
+      window.history.back();
+    }
   </script>
 </body>
 </html>
