@@ -1,36 +1,29 @@
-const mongoose = require('mongoose');
+// models/Donation.js
 
-const DonationSchema = new mongoose.Schema({
-    donationFrequency: {
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+const DonationSchema = new Schema({
+    name: {
         type: String,
-        enum: ['One Time', 'Monthly'],
+        required: true
+    },
+    email: {
+        type: String,
         required: true
     },
     amount: {
         type: Number,
-        required: false
-    },
-    customAmount: {
-        type: Number,
-        required: false
-    },
-    donationName: {
-        type: String,
         required: true
     },
-    donationEmail: {
+    frequency: {
         type: String,
+        enum: ['One Time', 'Monthly'],
         required: true
     },
-    createdAt: {
+    date: {
         type: Date,
         default: Date.now
     }
 });
-
-// Ensure that either amount or customAmount is provided
-DonationSchema.path('amount').validate(function(value) {
-    return value != null || this.customAmount != null;
-}, 'Either amount or customAmount must be provided');
-
 module.exports = mongoose.model('Donation', DonationSchema);
