@@ -1,9 +1,8 @@
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
-const crypto = require('crypto');
-const nodemailer = require('nodemailer');
-
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
 
 dotenv.config();
 
@@ -16,7 +15,7 @@ const generateToken = (id) => {
 exports.registerUser = async (req, res) => {
   const { name, email, password } = req.body;
 
-  try { 
+  try {
     const userExists = await User.findOne({ email });
 
     if (userExists) {
@@ -61,9 +60,6 @@ exports.authUser = async (req, res) => {
   }
 };
 
-
-
-
 exports.requestPasswordReset = async (req, res) => {
   const { email } = req.body;
 
@@ -74,18 +70,18 @@ exports.requestPasswordReset = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const resetToken = crypto.randomBytes(20).toString('hex');
+    const resetToken = crypto.randomBytes(20).toString("hex");
     const resetTokenExpiry = Date.now() + 3600000; // 1 hour
 
     user.resetPasswordToken = resetToken;
-    user.resetPasswordExpiry = resetTokenExpiry;  
+    user.resetPasswordExpiry = resetTokenExpiry;
 
     await user.save();
 
     const resetUrl = `http://localhost:5000/reset-password/${resetToken}`;
 
     const transporter = nodemailer.createTransport({
-      service: 'Gmail',
+      service: "Gmail",
       auth: {
         user: process.env.EMAIL,
         pass: process.env.EMAIL_PASSWORD,
@@ -95,7 +91,7 @@ exports.requestPasswordReset = async (req, res) => {
     const mailOptions = {
       to: user.email,
       from: process.env.EMAIL,
-      subject: 'Password Reset',
+      subject: "Password Reset",
       text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n
       Please click on the following link, or paste this into your browser to complete the process:\n\n
       ${resetUrl}\n\n
@@ -104,12 +100,11 @@ exports.requestPasswordReset = async (req, res) => {
 
     await transporter.sendMail(mailOptions);
 
-    res.status(200).json({ message: 'Password reset email sent' });
+    res.status(200).json({ message: "Password reset email sent" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
-
 
 exports.resetPassword = async (req, res) => {
   const { token } = req.params;
@@ -135,9 +130,22 @@ exports.resetPassword = async (req, res) => {
 
     await user.save();
 
-    res.status(200).json({ message: 'Password reset successful' });
+    res.status(200).json({ message: "Password reset successful" });
   } catch (error) {
     console.error("Error in resetPassword controller:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+// authController.js
+
+exports.getUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.json(user);
+  } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };

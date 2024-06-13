@@ -32,3 +32,16 @@ exports.createCampaign = async (req, res) => {
         res.status(500).send('Server error');
     }
 };
+// donationController.js
+
+const Donation = require('../models/Donation');
+
+exports.getUserDonations = async (req, res) => {
+  try {
+    const donations = await Donation.find({ userId: req.user.id });
+    res.json({ donations });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
