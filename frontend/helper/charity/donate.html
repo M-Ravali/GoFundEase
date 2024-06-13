@@ -337,5 +337,39 @@
         <script src="js/counter.js"></script>
         <script src="js/custom.js"></script>
 
+        <script>
+            document.getElementById('donationForm').addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent the default form submission
+        
+                const formData = new FormData(this);
+                const data = {};
+                formData.forEach((value, key) => {
+                    data[key] = value;
+                });
+        
+                fetch('/donate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === 'Donation successful') {
+                        alert('Donation successful!');
+                        // Optionally redirect to a thank you page
+                        // window.location.href = 'thankyou.html';
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while processing your donation.');
+                });
+            });
+        </script>
+        
     </body>
 </html>
