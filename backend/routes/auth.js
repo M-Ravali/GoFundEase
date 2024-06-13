@@ -7,6 +7,10 @@ const {
 } = require("../controllers/authController");
 
 const { getUserProfile } = require("../controllers/authController");
+const {
+  getUserProfile,
+  updateUserProfile,
+} = require("../controllers/authController");
 const { getUserDonations } = require("../controllers/donationController");
 const { protect } = require("../middleware/authMiddleware"); // assuming you have a middleware to protect routes
 
@@ -18,6 +22,7 @@ router.post("/request-password-reset", requestPasswordReset);
 router.post("/reset-password/:token", resetPassword);
 
 router.get("/profile", protect, getUserProfile);
+router.put("/profile", protect, updateUserProfile);
 router.get("/donations", protect, getUserDonations);
 
 module.exports = router;
