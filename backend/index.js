@@ -25,9 +25,6 @@ app.use('/api/stripe', stripeRoutes);
 app.use('/api/donations', donationRoutes);
 
   
-const PORT = process.env.PORT || 6000;  
+const PORT = process.env.PORT || 8080;    
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));             
-
-// Export the app for testing
-module.exports = app;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));                  
