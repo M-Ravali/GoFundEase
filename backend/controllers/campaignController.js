@@ -1,7 +1,7 @@
 const { validationResult } = require("express-validator");
 const Campaign = require("../models/Campaign");
 const Donation = require("../models/Donation");
-const { createObjectCsvWriter } = require('csv-writer');
+// const { createObjectCsvWriter } = require('csv-writer');
 const path = require('path');
 
 // Create a new campaign
@@ -68,24 +68,24 @@ exports.donateToCampaign = async (req, res) => {
 };
 
 // Export donations as CSV
-exports.exportDonations = async (req, res) => {
-  try {
-    const donations = await Donation.find().lean();
-    const csvWriter = createObjectCsvWriter({
-      path: path.join(__dirname, '..', 'donations.csv'),
-      header: [
-        { id: 'donorName', title: 'Donor Name' },
-        { id: 'amount', title: 'Amount' },
-        { id: 'date', title: 'Date' },
-        { id: 'campaignId', title: 'Campaign ID' },
-      ],
-    });
+// exports.exportDonations = async (req, res) => {
+//   try {
+//     const donations = await Donation.find().lean();
+//     const csvWriter = createObjectCsvWriter({
+//       path: path.join(__dirname, '..', 'donations.csv'),
+//       header: [
+//         { id: 'donorName', title: 'Donor Name' },
+//         { id: 'amount', title: 'Amount' },
+//         { id: 'date', title: 'Date' },
+//         { id: 'campaignId', title: 'Campaign ID' },
+//       ],
+//     });
 
-    await csvWriter.writeRecords(donations);
+//     await csvWriter.writeRecords(donations);
 
-    res.download(path.join(__dirname, '..', 'donations.csv'));
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).send('Error exporting donations');
-  }
-};
+//     res.download(path.join(__dirname, '..', 'donations.csv'));
+//   } catch (error) {
+//     console.error(error.message);
+//     res.status(500).send('Error exporting donations');
+//   }
+// };
