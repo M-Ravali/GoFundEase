@@ -35,6 +35,10 @@ app.get('/reset-password/:token', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend', 'helper', 'charity', 'resetpassword.html'));
 });
   
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+
 const PORT = process.env.PORT || 8080;  
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
