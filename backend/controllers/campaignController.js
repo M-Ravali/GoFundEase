@@ -121,7 +121,6 @@ exports.donateToCampaign = async (req, res) => {
 
 // donationController.js
 
-const Donation = require('../models/Donation');
 
 exports.getUserDonations = async (req, res) => {
   try {
@@ -129,7 +128,7 @@ exports.getUserDonations = async (req, res) => {
     res.json({ donations });
   } catch (error) {
     res.status(500).json({ message: error.message });
-  }
+  }  
 };
 
 
