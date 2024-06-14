@@ -1,3 +1,7 @@
+
+
+
+
 document.addEventListener('DOMContentLoaded', function () {
     // Login form validation
     const loginForm = document.getElementById('loginForm');
@@ -9,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (validateEmail(email) && password) {
                 try {
-                    const res = await fetch('http://localhost:5000/api/auth/login', {
+                    const res = await fetch('http://localhost:8080/api/auth/login', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json', // Set content type to JSON
@@ -51,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (name && validateEmail(email) && password && password === confirmPassword) {
                 try {
-                    const res = await fetch('http://localhost:5000/api/auth/register', {
+                    const res = await fetch('http://localhost:8080/api/auth/register', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json', // Set content type to JSON
@@ -100,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log(token)
 
             try {
-                const response = await fetch('http://localhost:5000/api/campaign', {
+                const response = await fetch('http://localhost:8080/api/campaign', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

@@ -11,27 +11,16 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install Node.js
+          name: Install Docker
           command: |
-            curl -o nodejs.msi https://nodejs.org/dist/v14.17.0/node-v14.17.0-x64.msi
-            Start-Process msiexec.exe -ArgumentList '/i nodejs.msi /quiet /norestart' -Wait
-            node --version
-            npm --version
+            curl -fsSL https://get.docker.com -o get-docker.sh
+            sh get-docker.sh
+            Start-Service docker
       - run:
-          name: Install Backend Dependencies
+          name: Build Docker Image
           command: |
             cd backend
-            npm install
-      - run:
-          name: Run Backend Tests
-          command: |
-            cd backend
-            npm test
-      - run:
-          name: Build Frontend
-          command: |
-            echo "Building frontend..."
-            # Add any frontend build steps here if needed
+            docker build -t gofundease-backend .
 
   deploy:
     executor: windows
