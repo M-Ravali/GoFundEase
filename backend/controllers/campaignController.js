@@ -95,6 +95,7 @@ exports.donateToCampaign = async (req, res) => {
 };
 
 // Export donations as CSV
+
 // exports.exportDonations = async (req, res) => {
 //   try {
 //     const donations = await Donation.find().lean();
@@ -116,3 +117,18 @@ exports.donateToCampaign = async (req, res) => {
 //     res.status(500).send("Error exporting donations");
 //   }
 // };
+
+// donationController.js
+
+const Donation = require('../models/Donation');
+
+exports.getUserDonations = async (req, res) => {
+  try {
+    const donations = await Donation.find({ userId: req.user.id });
+    res.json({ donations });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
