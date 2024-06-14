@@ -12,8 +12,8 @@ exports.createCampaign = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { title, description, goalAmount, currentAmount, endDate, contactEmail } = req.body;
-  const mediaFiles = req.files ? req.files.map((file) => file.path) : [];
+  const { title, description, goalAmount, endDate, contactEmail } = req.body;
+  const mediaFiles = req.files ? req.files.map(file => file.path) : [];
   const userId = req.user.id; // Retrieve userId from req.user
 
   try {
@@ -22,20 +22,19 @@ exports.createCampaign = async (req, res) => {
       title,
       description,
       goalAmount,
-      currentAmount,
+      currentAmount: 0, // Initialize currentAmount
       endDate,
       contactEmail,
       mediaFiles,
     });
 
     const campaign = await newCampaign.save();
-
     res.json(campaign);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send("Server error");
+    res.status(500).send('Server error');
   }
-};
+}
 
 // Fetch all campaigns
 exports.getAllCampiagns = async (req, res) => {

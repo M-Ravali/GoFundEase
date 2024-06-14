@@ -1,11 +1,37 @@
 document.addEventListener("DOMContentLoaded", function () {
+  console.log("DOM fully loaded and parsed");
+  
   fetch("http://localhost:8080/api/campaign/all")
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok " + response.statusText);
+      }
+      return response.json();
+    })
     .then((campaigns) => {
       const container = document.getElementById("campaignsContainer");
-      campaigns.forEach((campaign, index) => {
+      
+      if (!container) {
+        console.error("No element with ID 'campaignsContainer' found");
+        return;
+      }
+      
+      if (!Array.isArray(campaigns)) {
+        throw new Error("Expected an array of campaigns");
+      }
+
+      // Reverse the campaigns array
+      campaigns.reverse();
+      
+      campaigns.forEach((campaign) => {
         const campaignDiv = document.createElement("div");
-        campaignDiv.classList.add("col-lg-4", "col-md-6", "col-12", "mb-4", "mb-lg-0");
+        campaignDiv.classList.add(
+          "col-lg-4",
+          "col-md-6",
+          "col-12",
+          "mb-4",
+          "mb-lg-0"
+        );
         const campaignContent = `
           <div class="custom-block-wrap card-height">
             <div style="height: 200px; overflow: hidden;">
@@ -32,88 +58,74 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     })
     .catch((error) => {
-      console.error('Error fetching campaigns:', error);
+      console.error("Error fetching campaigns:", error);
     });
 });
 
+function getTokenFromCookie() {
+  const name = "token=";
+  const decodedCookie = decodeURIComponent(document.cookie);
+  const ca = decodedCookie.split(";");
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) === " ") {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) === 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
 
+async function uploadCampaign() {
+  const campaignName = document.getElementById('campaignName').value;
+  const campaignDescription = document.getElementById('campaignDescription').value;
+  const goalAmount = document.getElementById('goalAmount').value;
+  const endDate = document.getElementById('endDate').value;
+  const contactEmail = document.getElementById('contactEmail').value;
+  const imageUpload = document.getElementById('imageUpload').files[0];
+  const videoUpload = document.getElementById('videoUpload').files[0];
 
-
-document.addEventListener('DOMContentLoaded', function () {
-  // Function to get the token from the cookie
-  function getTokenFromCookie() {
-      const name = 'token=';
-      const decodedCookie = decodeURIComponent(document.cookie);
-      const ca = decodedCookie.split(';');
-      for (let i = 0; i < ca.length; i++) {
-          let c = ca[i];
-          while (c.charAt(0) === ' ') {
-              c = c.substring(1);
-          }
-          if (c.indexOf(name) === 0) {
-              return c.substring(name.length, c.length);
-          }
-      }
-      return '';
+  const formData = new FormData();
+  formData.append('title', campaignName);
+  formData.append('description', campaignDescription);
+  formData.append('goalAmount', goalAmount);
+  formData.append('endDate', endDate);
+  formData.append('contactEmail', contactEmail);
+  if (imageUpload) {
+    formData.append('mediaFiles', imageUpload);
+  }
+  if (videoUpload) {
+    formData.append('mediaFiles', videoUpload);
   }
 
-  // Function to handle file upload and campaign creation
-  async function uploadFiles() {
-      const campaignName = document.getElementById('campaignName').value;
-      const campaignDescription = document.getElementById('campaignDescription').value;
-      const goalAmount = document.getElementById('goalAmount').value;
-      const currentAmount = document.getElementById('currentAmount').value;
-      const endDate = document.getElementById('endDate').value;
-      const contactEmail = document.getElementById('contactEmail').value;
-      const imageUpload = document.getElementById('imageUpload').files[0];
-      const videoUpload = document.getElementById('videoUpload').files[0];
-
-      const formData = new FormData();
-      formData.append('title', campaignName);
-      formData.append('description', campaignDescription);
-      formData.append('goalAmount', goalAmount);
-      formData.append('currentAmount', currentAmount);
-      formData.append('endDate', endDate);
-      formData.append('contactEmail', contactEmail);
-
-      if (imageUpload) {
-          formData.append('files', imageUpload);
-      }
-      if (videoUpload) {
-          formData.append('files', videoUpload);
-      }
-
-      const token = getTokenFromCookie();
-      if (!token) {
-          console.error('No token found, user not authenticated');
-          alert('You must be logged in to create a campaign.');
-          return;
-      }
-
-      try {
-          const response = await fetch('http://localhost:8080/api/campaign', {
-              method: 'POST',
-              body: formData,
-              headers: {
-                  'Authorization': `Bearer ${token}`
-              },
-          });
-
-          const result = await response.json();
-          if (response.ok) {
-              console.log('Campaign uploaded successfully', result);
-              alert('Campaign uploaded successfully');
-          } else {
-              console.error('Error uploading campaign', result);
-              alert('Error uploading campaign: ' + result.message);
-          }
-      } catch (error) {
-          console.error('Error uploading campaign', error);
-          alert('An error occurred while uploading the campaign.');
-      }
+  const token = getTokenFromCookie();
+  if (!token) {
+    console.error('No token found, user not authenticated');
+    alert('You must be logged in to create a campaign.');
+    return;
   }
 
-  // Add other event listeners or functions here, like login and registration handlers
+  try {
+    const response = await fetch('http://localhost:8080/api/campaign', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-});
-
+    const result = await response.json();
+    if (response.ok) {
+      console.log('Campaign uploaded successfully', result);
+      alert('Campaign uploaded successfully');
+    } else {
+      console.error('Error uploading campaign', result);
+      alert('Error uploading campaign: ' + result.message);
+    }
+  } catch (error) {
+    console.error('Error uploading campaign', error);
+    alert('An error occurred while uploading the campaign.');
+  }
+}
