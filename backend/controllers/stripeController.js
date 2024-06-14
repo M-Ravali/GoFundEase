@@ -4,6 +4,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 
 
+
 exports.createPaymentIntent = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
