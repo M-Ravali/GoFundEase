@@ -1,9 +1,8 @@
 const { validationResult } = require("express-validator");
 const Campaign = require("../models/Campaign");
 const Donation = require("../models/Donation");
-// const { createObjectCsvWriter } = require("csv-writer");
-const path = require("path");
-
+// const { createObjectCsvWriter } = require('csv-writer');
+const path = require('path');
 
 // Create a new campaign
 exports.createCampaign = async (req, res) => {
@@ -110,6 +109,7 @@ exports.donateToCampaign = async (req, res) => {
 //       ],
 //     });
 
+//     await csvWriter.writeRecords(donations);
 //     await csvWriter.writeRecords(donations);
 
 //     res.download(path.join(__dirname, "..", "donations.csv"));
