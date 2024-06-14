@@ -5,6 +5,7 @@ const authRoutes = require('./routes/auth');
 const campaignRoutes = require('./routes/campaign');
 const stripeRoutes = require('./routes/stripe');
 const donationRoutes = require('./routes/donation');
+const volunteerRoutes = require('./routes/volunteer');
 const cors = require('cors');
 const http = require('http');
 const path = require('path');
@@ -23,6 +24,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/campaign', campaignRoutes);
 app.use('/api/stripe', stripeRoutes);
 app.use('/api/donations', donationRoutes);
+app.use('/api/volunteer', volunteerRoutes)
 
 
 // Middleware to serve static files (like your HTML, CSS, and JS)

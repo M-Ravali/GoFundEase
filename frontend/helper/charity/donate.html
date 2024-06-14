@@ -347,7 +347,7 @@
                     data[key] = value;
                 });
         
-                fetch('/donate', {
+                fetch('http://localhost:8080/api/donations/donate', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
