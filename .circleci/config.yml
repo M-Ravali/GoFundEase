@@ -1,29 +1,46 @@
 version: 2.1
+
+executors:
+  windows:
+    machine:
+      image: windows-server-2019-vs2019:stable
+
 jobs:
-  build_and_push:
-    Docker Class Exercise6docker:
-      - image: cimg/python:3.8
+  build:
+    executor: windows
     steps:
       - checkout
-      - setup_remote_docker:
-          version: 19.03.13
+      - run:
+          name: Install Docker
+          command: |
+            curl -fsSL https://get.docker.com -o get-docker.sh
+            sh get-docker.sh
+            Start-Service docker
       - run:
           name: Build Docker Image
           command: |
-            docker build -t $DOCKERHUB_USERNAME/myapp:${CIRCLE_SHA1} .
+            cd backend
+            docker build -t gofundease-backend .
+
+  deploy:
+    executor: windows
+    steps:
+      - attach_workspace:
+          at: /workspace
       - run:
-          name: Authenticate with Docker Hub
+          name: Deploy Application
           command: |
-            echo "$DOCKERHUB_PASS" | docker login --username $DOCKERHUB_USERNAME --password-stdin
-      - run:
-          name: Push Docker Image to Docker Hub
-          command: |
-            docker push $DOCKERHUB_USERNAME/myapp:${CIRCLE_SHA1}
+            echo "Deploying application..."
+            # Add your deployment script or commands here
+
 workflows:
   version: 2
-  build_and_deploy:
+  build-and-deploy:
     jobs:
-      - build_and_push:
+      - build
+      - deploy:
+          requires:
+            - build
           filters:
             branches:
               only: main
