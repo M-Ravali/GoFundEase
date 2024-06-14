@@ -6,13 +6,13 @@ const {
   resetPassword,
 } = require("../controllers/authController");
 
-const { getUserProfile } = require("../controllers/authController");
+// const { getUserProfile } = require("../controllers/authController");
 const {
   getUserProfile,
   updateUserProfile,
 } = require("../controllers/authController");
 const { getUserDonations } = require("../controllers/donationController");
-const { protect } = require("../middleware/authMiddleware"); // assuming you have a middleware to protect routes
+const { protect } = require("../middlewares/authMiddleware"); // assuming you have a middleware to protect routes
 
 const router = express.Router();
 
