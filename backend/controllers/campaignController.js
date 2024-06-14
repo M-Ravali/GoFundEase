@@ -118,9 +118,7 @@ exports.donateToCampaign = async (req, res) => {
 //   }
 // };
 
-// donationController.js
-
-const Donation = require('../models/Donation');
+// donationContro
 
 exports.getUserDonations = async (req, res) => {
   try {
