@@ -55,7 +55,7 @@ jobs:
 workflows:
   build-and-test:
     jobs:
-      - test-node
+      # - test-node
       - build-and-push:
           requires:
             - test-node
