@@ -2,18 +2,18 @@ const Donation = require('../models/Donation');
 
 exports.createDonation = async (req, res) => {
     try {
-        const { donationFrequency, amount, customAmount, donationName, donationEmail } = req.body;
+        const { donationFrequency, amount, customAmount, donationName, donationEmail, campaignId } = req.body;
 
         // Validate input
-        if (!donationFrequency || (!amount && !customAmount) || !donationName || !donationEmail) {
+        if (!donationFrequency || (!amount && !customAmount) || !donationName || !donationEmail || ! campaignId) {
             return res.status(400).json({ message: 'All required fields must be filled out correctly' });
         }
 
         const newDonation = new Donation({
             donationFrequency,
-            amount,
-            donorName,
-            donorEmail,
+            amount ,
+            donorName ,
+            donorEmail ,
             campaignId
         });
 
