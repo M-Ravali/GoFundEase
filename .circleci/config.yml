@@ -44,8 +44,8 @@ jobs:
       - run:
           name: Tag the docker containers with latest tag
           command: |
-            docker tag gofundease-frontend:latest ravalimaddela/gofund-ease-frontend:${CIRCLE_SHA1}
-            docker tag gofundease-backend:latest ravalimaddela/go-fund-ease:${CIRCLE_SHA1}
+            docker tag project-frontend:latest ravalimaddela/gofund-ease-frontend:${CIRCLE_SHA1}
+            docker tag project-backend:latest ravalimaddela/go-fund-ease:${CIRCLE_SHA1}
       - run:
           name: Push the docker containers to docker hub
           command: |
