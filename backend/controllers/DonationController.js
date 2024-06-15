@@ -12,9 +12,9 @@ exports.createDonation = async (req, res) => {
         const newDonation = new Donation({
             donationFrequency,
             amount,
-            customAmount,
-            donationName,
-            donationEmail
+            donorName,
+            donorEmail,
+            campaignId
         });
 
         await newDonation.save();

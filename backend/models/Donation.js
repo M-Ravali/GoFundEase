@@ -1,29 +1,32 @@
-// models/Donation.js
-
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 
-const DonationSchema = new Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        required: true
-    },
-    amount: {
-        type: Number,
-        required: true
-    },
-    frequency: {
-        type: String,
-        enum: ['One Time', 'Monthly'],
-        required: true
-    },
-    date: {
-        type: Date,
-        default: Date.now
-    }
+const DonationSchema = new mongoose.Schema({
+  donorName: {
+    type: String,
+    required: true
+  },
+  donorEmail: {
+    type: String,
+    required: true
+  },
+  amount: {
+    type: Number,
+    required: true
+  },
+  date: {
+    type: Date,
+    default: Date.now
+  },
+  campaignId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Campaign',
+    required: true
+  },
+  donationFrequency: {
+    type: String,
+    enum: ['One Time', 'Monthly'],
+    required: true
+  }
 });
+
 module.exports = mongoose.model('Donation', DonationSchema);
