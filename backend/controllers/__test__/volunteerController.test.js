@@ -1,6 +1,6 @@
 // controllers/__test__/volunteerController.test.js
 
-const Volunteer = require('./volunteer'); // Adjust the path based on your project structure
+const Volunteer = require('../../models/volunteer'); // Adjust the path based on your project structure
 const { createVolunteer } = require('../volunteerController'); // Adjust the path based on your project structure
 
 jest.mock('../../models/volunteer'); // Mock the volunteer model
