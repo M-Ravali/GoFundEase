@@ -121,13 +121,13 @@ exports.donateToCampaign = async (req, res) => {
 // donationController.js
 
 
-exports.getUserDonations = async (req, res) => {
-  try {
-    const donations = await Donation.find({ userId: req.user.id });
-    res.json({ donations });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }  
-};
+// exports.getUserDonations = async (req, res) => {
+//   try {
+//     const donations = await Donation.find({ userId: req.user.id });
+//     res.json({ donations });
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }  
+// };
 
 
