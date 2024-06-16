@@ -18,7 +18,7 @@ exports.createDonation = async (req, res) => {
         });
 
         await newDonation.save();
-        res.status(201).json({ message: 'Donation successful', donation: newDonation });
+        res.status(201).json({ message: 'Donation successful', newDonation });
     } catch (error) {
         res.status(500).json({ message: 'Server error', error });
     }
