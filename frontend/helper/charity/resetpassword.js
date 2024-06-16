@@ -1,8 +1,11 @@
-// Check if the URL contains a token parameter
-const urlParams = new URLSearchParams(window.location.search);
-const token = urlParams.get('token');
+// Function to extract token from URL path
+function getTokenFromPath() {
+    const pathParts = window.location.pathname.split('/');
+    return pathParts[pathParts.length - 1];
+}
 
-console.log(urlParams);
+const token = getTokenFromPath();
+
 console.log(token);
 
 if (!token) {
