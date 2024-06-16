@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Profile - GoFundEase</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="../../../public/index.html">GoFundEase</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </nav>
+
+    <div class="container">
+      <h1 class="mt-5">User Profile</h1>
+      <div class="row">
+        <div class="col-md-8">
+          <p id="name-label" class="font-weight-bold">Name:</p>
+          <span id="name" class="ml-5">John</span>
+          <p id="email-label" class="font-weight-bold">Email:</p>
+          <span id="email" class="ml-5">John@gmail.com</span>
+          <p for="bio" class="font-weight-bold">Bio</p>
+          <textarea
+            class="form-control"
+            id="bio"
+            rows="3"
+            placeholder="Tell us a bit about yourself"
+          ></textarea>
+        </div>
+      </div>
+      <!-- <h2>Donation History</h2>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Campaign</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody id="donation-history">
+                    <tr>
+                        <td>Loading...</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div> -->
+    </div>
+
+    <script src="profile.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>
