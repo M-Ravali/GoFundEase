@@ -6,6 +6,7 @@ const campaignRoutes = require('./routes/campaign');
 const stripeRoutes = require('./routes/stripe');
 const donationRoutes = require('./routes/donation');
 const volunteerRoutes = require('./routes/volunteer');
+const profileRoutes = require('./routes/profile')
 const cors = require('cors');
 const http = require('http');
 const path = require('path');
@@ -24,7 +25,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/campaign', campaignRoutes);
 app.use('/api/stripe', stripeRoutes);
 app.use('/api/donations', donationRoutes);
-app.use('/api/volunteer', volunteerRoutes)
+app.use('/api/volunteer', volunteerRoutes);
+app.use('/users', profileRoutes)
 
 
 // Middleware to serve static files (like your HTML, CSS, and JS)
@@ -36,11 +38,11 @@ app.get('/reset-password/:token', (req, res) => {
   // Render the reset password page, passing the token if necessary
   res.sendFile(path.join(__dirname, '../frontend', 'helper', 'charity', 'resetpassword.html'));
 });
-  
+
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
-const PORT = process.env.PORT || 8080;  
+const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
