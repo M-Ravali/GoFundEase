@@ -1,60 +1,12 @@
+// profile.js
+
 // Function to check if the user is logged in
 function isLoggedIn() {
-  // Implement your actual authentication logic here
-  // Example: Check if a token is present in cookies or localStorage
   const token = getTokenFromCookie(); // Assume getTokenFromCookie function exists
-
   return !!token; // Return true if token exists, false otherwise
 }
 
-// Function to update navbar based on login status
-function updateNavbar() {
-  const profileDropdown = document.getElementById("profileDropdown");
-  const loginButton = document.getElementById("loginButton");
-
-  if (isLoggedIn()) {
-    // User is logged in
-    profileDropdown.classList.remove("d-none"); // Show profile dropdown
-    loginButton.classList.add("d-none"); // Hide login button
-  } else {
-    // User is not logged in
-    profileDropdown.classList.add("d-none"); // Hide profile dropdown
-    loginButton.classList.remove("d-none"); // Show login button
-  }
-}
-
-// Event listener for DOMContentLoaded
-document.addEventListener("DOMContentLoaded", async function () {
-  updateNavbar(); // Initial update based on current login status
-
-  // Example: Listen for login/logout events and update navbar accordingly
-  document.addEventListener("login", updateNavbar); // Triggered after successful login
-  document.addEventListener("logout", updateNavbar); // Triggered after logout
-
-  // Event listener for logout link
-
-  // Logout functionality
-  const logoutButton = document.getElementById("logoutLink");
-  if (logoutButton) {
-    logoutButton.addEventListener("click", function () {
-      // Clear the token from cookies
-      document.cookie = "token=; Max-Age=0; path=/;";
-
-      // Optionally, clear the token from localStorage if stored there
-      // localStorage.removeItem('token');
-
-      // Alert user about successful logout
-      alert("You have been logged out successfully.");
-
-      // Redirect to login page or homepage
-      window.location.href = "index.html";
-    });
-  }
-
-  await checkAuthStatus(); // Ensure initial check on page load
-});
-
-// Example function to get token from cookie (replace with your actual function)
+// Example function to get token from cookie
 function getTokenFromCookie() {
   const name = "token=";
   const decodedCookie = decodeURIComponent(document.cookie);
@@ -71,15 +23,74 @@ function getTokenFromCookie() {
   return "";
 }
 
-// Example function to clear token from cookie (replace with your actual function)
-function clearTokenFromCookie() {
-  document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-  // For localStorage: localStorage.removeItem('token');
+// Fetch user profile data
+async function fetchUserProfile(token) {
+  const apiEndpoint = 'http://localhost:8080/users/profile';
+
+  try {
+    const response = await fetch(apiEndpoint, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    const data = await response.json();
+    if (data.message) {
+      console.error('Error:', data.message);
+      return;
+    }
+
+    console.log(data);
+
+    document.getElementById('user-avatar').src = data.avatar || 'user-avatar.jpg';
+    document.getElementById('name').innerText = data.name;
+    document.getElementById('email').innerText = data.email || '';
+    document.getElementById('bio').value = data.bio || '';
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+  }
 }
 
-// Example function to check authentication status
-async function checkAuthStatus() {
-  // Implement your logic here to check if the user is authenticated
-  // For example, make an API call to verify the token or check localStorage
-  updateNavbar(); // Update the navbar based on the authentication status
-}
+// Fetch donation history
+// async function fetchDonationHistory(token) {
+//   const donationEndpoint = 'https://your-backend-api.com/donations';
+
+//   try {
+//     const response = await fetch(donationEndpoint, {
+//       method: 'GET',
+//       headers: {
+//         'Authorization': `Bearer ${token}`
+//       }
+//     });
+//     const data = await response.json();
+//     if (data.message) {
+//       console.error('Error:', data.message);
+//       return;
+//     }
+
+//     const donationHistory = document.getElementById('donation-history');
+//     donationHistory.innerHTML = ''; // Clear loading message
+//     data.forEach(donation => {
+//       const row = document.createElement('tr');
+//       row.innerHTML = `
+//         <td>${donation.campaign}</td>
+//         <td>$${donation.amount}</td>
+//         <td>${new Date(donation.date).toLocaleDateString()}</td>
+//       `;
+//       donationHistory.appendChild(row);
+//     });
+//   } catch (error) {
+//     console.error('Error fetching donation history:', error);
+//   }
+// }
+
+// Event listener for DOMContentLoaded
+document.addEventListener('DOMContentLoaded', async function () {
+  const token = getTokenFromCookie();
+  if (token) {
+    await fetchUserProfile(token);
+    // await fetchDonationHistory(token);
+  } else {
+    console.error('No token found in cookies');
+  }
+});

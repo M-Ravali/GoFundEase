@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">GoFundEase</a>
@@ -32,23 +34,19 @@
                 <p>Edit Profile Picture</p>
             </div>
             <div class="col-md-8">
-                <form id="user-form">
-                    <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" class="form-control" id="name" />
-                    </div>
-                    <div class="form-group">
-                        <label for="phone">Phone Number</label>
-                        <input type="tel" class="form-control" id="phone" placeholder="Optional" />
-                    </div>
-                    <div class="form-group">
-                        <label for="bio">Bio</label>
-                        <textarea class="form-control" id="bio" rows="3" placeholder="Tell us a bit about yourself"></textarea>
-                    </div>
-                </form>
+
+
+                <p id="name-label" class="font-weight-bold">Name:</p><span id="name" class="ml-5">John</span>
+                <p id="email-label" class="font-weight-bold">Email:</p><span id="email"
+                    class="ml-5">John@gmail.com</span>
+
+
+                <p for="bio" class="font-weight-bold">Bio</p>
+                <textarea class="form-control" id="bio" rows="3" placeholder="Tell us a bit about yourself"></textarea>
+
             </div>
         </div>
-        <h2>Donation History</h2>
+        <!-- <h2>Donation History</h2>
         <div class="table-responsive">
             <table class="table table-striped table-bordered">
                 <thead class="thead-dark">
@@ -66,62 +64,15 @@
                     </tr>
                 </tbody>
             </table>
-        </div>
+        </div> -->
     </div>
+
+    <script src="profile.js"></script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Replace with your actual API endpoint
-            const apiEndpoint = 'https://your-backend-api.com/user/profile';
-            const donationEndpoint = 'https://your-backend-api.com/user/donations';
 
-            // Fetch user profile data
-            fetch(apiEndpoint, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}` // Assumes token is stored in localStorage
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('user-avatar').src = data.avatar || 'user-avatar.jpg';
-                document.getElementById('user-name').innerText = data.name;
-                document.getElementById('name').value = data.name;
-                document.getElementById('phone').value = data.phone || '';
-                document.getElementById('bio').value = data.bio || '';
-            })
-            .catch(error => {
-                console.error('Error fetching user profile:', error);
-            });
-
-            // Fetch donation history
-            fetch(donationEndpoint, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}` // Assumes token is stored in localStorage
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                const donationHistory = document.getElementById('donation-history');
-                donationHistory.innerHTML = ''; // Clear loading message
-                data.donations.forEach(donation => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${donation.campaign}</td>
-                        <td>$${donation.amount}</td>
-                        <td>${new Date(donation.date).toLocaleDateString()}</td>
-                    `;
-                    donationHistory.appendChild(row);
-                });
-            })
-            .catch(error => {
-                console.error('Error fetching donation history:', error);
-            });
-        });
-    </script>
 </body>
+
 </html>
