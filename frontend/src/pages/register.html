@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register - GoFundEase</title>
+    <!-- CSS FILES -->
+    <link href="../styles/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../styles/css/bootstrap-icons.css" rel="stylesheet" />
+    <link href="../styles/css/style.css" rel="stylesheet" />
+    <link href="../styles/css/style1.css" rel="stylesheet" />
+    <link href="../styles/css/register.css" rel="stylesheet" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-12 d-flex flex-wrap">
+            <p class="d-flex me-4 mb-0">
+              <i class="bi-geo-alt me-2"></i>
+              20 North Grand, Saint Louis, Missouri, USA
+            </p>
+  
+            <p class="d-flex mb-0">
+              <i class="bi-envelope me-2"></i>
+  
+              <a href="mailto:info@company.com"> info@company.com </a>
+            </p>
+          </div>
+  
+          <div class="col-lg-3 col-12 ms-auto d-lg-block d-none">
+            <ul class="social-icon">
+              <li class="social-icon-item">
+                <a href="#" class="social-icon-link bi-twitter"></a>
+              </li>
+  
+              <li class="social-icon-item">
+                <a href="#" class="social-icon-link bi-facebook"></a>
+              </li>
+  
+              <li class="social-icon-item">
+                <a href="#" class="social-icon-link bi-instagram"></a>
+              </li>
+  
+              <li class="social-icon-item">
+                <a href="#" class="social-icon-link bi-youtube"></a>
+              </li>
+  
+              <li class="social-icon-item">
+                <a href="#" class="social-icon-link bi-whatsapp"></a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+  
+    <nav class="navbar navbar-expand-lg bg-light shadow-lg">
+      <div class="container">
+        <a class="navbar-brand" href="">
+          <span> GoFundEase </span>
+        </a>
+  
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+  
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link click-scroll" href="#top">Home</a>
+            </li>
+  
+            <li class="nav-item">
+              <a class="nav-link click-scroll" href="#section_2">About</a>
+            </li>
+  
+            <li class="nav-item">
+              <a class="nav-link click-scroll" href="#section_3">Causes</a>
+            </li>
+  
+            <li class="nav-item">
+              <a class="nav-link click-scroll" href="#section_4">Volunteer</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../src/pages/Campaign/campaign.html"
+                >Campaigns</a
+              >
+            </li>
+  
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link click-scroll dropdown-toggle"
+                href="#section_5"
+                id="navbarLightDropdownMenuLink"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                >News</a
+              >
+  
+              <ul
+                class="dropdown-menu dropdown-menu-light"
+                aria-labelledby="navbarLightDropdownMenuLink"
+              >
+                <li>
+                  <a class="dropdown-item" href="../src/pages/news.html"
+                    >News Listing</a
+                  >
+                </li>
+  
+                <li>
+                  <a class="dropdown-item" href="../src/pages/news-detail.html"
+                    >News Detail</a
+                  >
+                </li>
+              </ul>
+            </li>
+  
+            <li class="nav-item">
+              <a class="nav-link click-scroll" href="#section_6">Contact</a>
+            </li>
+  
+            <li class="nav-item ms-3">
+              <a
+                class="nav-link custom-btn custom-border-btn btn"
+                href="../src/pages/donate.html"
+                >Donate</a
+              >
+            </li>
+            <li class="nav-item dropdown d-none" id="profileDropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <img
+                  src="./user-avatar.jpg"
+                  alt="User Avatar"
+                  class="rounded-circle"
+                  width="30"
+                  height="30"
+                />
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="../src/pages/Profile/profile.html"
+                  >Your Profile</a
+                >
+                <a class="dropdown-item" href="#" id="logoutLink">Logout</a>
+              </div>
+            </li>
+            <li class="nav-item" id="loginButton">
+              <a class="nav-link" href="../src/pages/login.html">Login</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <main>
+      <section class="d-flex justify-content-center align-items-center w-100">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-6 mx-auto">
+              <div class="login-form">
+                <h2>Register to GoFundEase</h2>
+                <form id="registerForm">
+                  <div class="form-group">
+                    <label for="name">Name</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="name"
+                      name="name"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="email">Email</label>
+                    <input
+                      type="email"
+                      class="form-control"
+                      id="email"
+                      name="email"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="password">Password</label>
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="password"
+                      name="password"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      required
+                    />
+                  </div>
+                  <button type="submit" class="btn btn-primary mt-3">
+                    Register
+                  </button>
+                </form>
+                <p
+                  id="registerError"
+                  class="text-danger mt-3"
+                  style="display: none"
+                >
+                  Registration failed
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <!-- JavaScript for registration form validation -->
+    <script src="main.js"></script>
+  </body>
+</html>
