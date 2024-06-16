@@ -1,83 +1,76 @@
 const request = require('supertest');
-const { app, server } = require('../../index.js'); 
-const mongoose = require('mongoose');
-const Donation = require('../models/Donation.js'); 
+const express = require('express');
+const bodyParser = require('body-parser');
+const Donation = require('../../models/Donation');
+const { createDonation } = require('../donationController');
 
-describe('Donation Controller', () => {
-  // Clean up the database before and after tests
-  beforeAll(async () => {
-    await mongoose.connect(process.env.MONGO_URI);
-  });
+jest.mock('../../models/Donation');
 
-  afterAll(async () => {
-    await mongoose.connection.close();
-    await server.close(); // Close the server
-  });
+const app = express();
+app.use(bodyParser.json());
+app.post('/donations', createDonation);
 
-  afterEach(async () => {
-    await Donation.deleteMany({});
-  });
-
-  describe('POST /api/donations/donate', () => {
-    it('should create a donation successfully', async () => {
-      const donationData = {
-        donationFrequency: 'One Time',
-        amount: 50,
-        donationName: 'John Doe',
-        donationEmail: 'john.doe@example.com'
-      };
-
-      const res = await request(app)
-        .post('/api/donations/donate')
-        .send(donationData);
-
-      expect(res.status).toBe(201);
-      expect(res.body).toHaveProperty('message', 'Donation successful');
-      expect(res.body.donation).toHaveProperty('_id');
-      expect(res.body.donation).toHaveProperty('donationFrequency', 'One Time');
-      expect(res.body.donation).toHaveProperty('amount', 50);
-      expect(res.body.donation).toHaveProperty('donationName', 'John Doe');
-      expect(res.body.donation).toHaveProperty('donationEmail', 'john.doe@example.com');
+describe('createDonation', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
     });
 
-    it('should return a 400 error if required fields are missing', async () => {
-      const donationData = {
-        amount: 50,
-        donationName: 'John Doe',
-        donationEmail: 'john.doe@example.com'
-      };
+    it('should create a new donation successfully', async () => {
+        const newDonation = {
+            donationFrequency: 'monthly',
+            amount: 50,
+            customAmount: null,
+            donationName: 'John Doe',
+            donationEmail: 'john@example.com'
+        };
 
-      const res = await request(app)
-        .post('/api/donations/donate')
-        .send(donationData);
+        // Mock the save method to resolve with the donation object
+        Donation.prototype.save.mockResolvedValue(newDonation);
 
-      expect(res.status).toBe(400);
-      expect(res.body).toEqual({
-        message: 'All required fields must be filled out correctly'
-      });
+        const response = await request(app)
+            .post('/donations')
+            .send(newDonation);
+
+        expect(response.status).toBe(201);
+        expect(response.body.message).toBe('Donation successful');
+        expect(Donation.prototype.save).toHaveBeenCalledTimes(1);
     });
 
-    it('should return a 500 error if server error occurs', async () => {
-      jest.spyOn(Donation.prototype, 'save').mockImplementationOnce(() => {
-        throw new Error('Server error');
-      });  
+    it('should return 400 if required fields are missing', async () => {
+        const invalidDonation = {
+            donationFrequency: 'monthly',
+            amount: null,
+            customAmount: null,
+            donationName: 'John Doe',
+            donationEmail: 'john@example.com'
+        };
 
-      const donationData = {
-        donationFrequency: 'One Time',
-        amount: 50,
-        donationName: 'John Doe',
-        donationEmail: 'john.doe@example.com'
-      };
+        const response = await request(app)
+            .post('/donations')
+            .send(invalidDonation);
 
-      const res = await request(app)
-        .post('/api/donations/donate')
-        .send(donationData);
-
-      expect(res.status).toBe(500);
-      expect(res.body).toEqual({
-        message: 'Server error',
-        error: expect.any(Object)
-      });
+        expect(response.status).toBe(400);
+        expect(response.body.message).toBe('All required fields must be filled out correctly');
+        expect(Donation.prototype.save).not.toHaveBeenCalled();
     });
-  });
+
+    it('should return 500 if there is a server error', async () => {
+        const validDonation = {
+            donationFrequency: 'monthly',
+            amount: 50,
+            customAmount: null,
+            donationName: 'John Doe',
+            donationEmail: 'john@example.com'
+        };
+
+        Donation.prototype.save.mockRejectedValue(new Error('Server error'));
+
+        const response = await request(app)
+            .post('/donations')
+            .send(validDonation);
+
+        expect(response.status).toBe(500);
+        expect(response.body.message).toBe('Server error');
+        expect(Donation.prototype.save).toHaveBeenCalledTimes(1);
+    });
 });
