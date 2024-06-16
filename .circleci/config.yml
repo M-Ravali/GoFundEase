@@ -1,46 +1,64 @@
+# This config was automatically generated from your source code
+# Stacks detected: deps:java:RealTimeSensorDataAnalyticsBackend,deps:node:sensor_analytics_frontend,tool:gradle:
 version: 2.1
-
-executors:
-  windows:
-    machine:
-      image: windows-server-2019-vs2019:stable
-
+orbs:
+  node: circleci/node@5
 jobs:
-  build:
-    executor: windows
+  test-node:
+    # Install node dependencies and run tests
+    executor: node/default
+    working_directory: ~/project/backend
+    steps:
+      - checkout:
+          path: ~/project
+      - node/install-packages:
+          pkg-manager: npm
+      - run:
+          name: Run tests
+          command: npm test --passWithNoTests
+  build-and-push:
+    docker:
+      - image: cimg/python:3.8
     steps:
       - checkout
+      - setup_remote_docker:
+          version: 20.10.7
+      # Install Docker Compose
       - run:
-          name: Install Docker
+          name: Install Docker Compose
           command: |
-            curl -fsSL https://get.docker.com -o get-docker.sh
-            sh get-docker.sh
-            Start-Service docker
+            sudo curl -L "https://github.com/docker/compose/releases/download/v2.27.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+            sudo chmod +x /usr/local/bin/docker-compose
       - run:
-          name: Build Docker Image
+          name: Run the docker compose up command
           command: |
-            cd backend
-            docker build -t gofundease-backend .
-
-  deploy:
-    executor: windows
-    steps:
-      - attach_workspace:
-          at: /workspace
+            docker-compose build
       - run:
-          name: Deploy Application
+          name: check the docker images
           command: |
-            echo "Deploying application..."
-            # Add your deployment script or commands here
+            docker images
+      - run:
+          name: Authenticate with Docker Hub
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login --username $DOCKERHUB_USERNAME --password-stdin
+      - run:
+          name: Tag the docker containers with latest tag
+          command: |
+            docker tag project-frontend:latest ravalimaddela/gofund-ease-frontend:${CIRCLE_SHA1}
+            docker tag project-backend:latest ravalimaddela/go-fund-ease:${CIRCLE_SHA1}
+      - run:
+          name: Push the docker containers to docker hub
+          command: |
+            docker push ravalimaddela/gofund-ease-frontend:${CIRCLE_SHA1}
+            docker push ravalimaddela/go-fund-ease:${CIRCLE_SHA1}
 
 workflows:
-  version: 2
-  build-and-deploy:
+  build-and-test:
     jobs:
-      - build
-      - deploy:
-          requires:
-            - build
+      # - test-node
+      - build-and-push:
+          # requires:
+          #   - test-node
           filters:
             branches:
               only: main
