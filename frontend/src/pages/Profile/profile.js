@@ -51,39 +51,6 @@ async function fetchUserProfile(token) {
   }
 }
 
-// Fetch donation history
-// async function fetchDonationHistory(token) {
-//   const donationEndpoint = 'https://your-backend-api.com/donations';
-
-//   try {
-//     const response = await fetch(donationEndpoint, {
-//       method: 'GET',
-//       headers: {
-//         'Authorization': `Bearer ${token}`
-//       }
-//     });
-//     const data = await response.json();
-//     if (data.message) {
-//       console.error('Error:', data.message);
-//       return;
-//     }
-
-//     const donationHistory = document.getElementById('donation-history');
-//     donationHistory.innerHTML = ''; // Clear loading message
-//     data.forEach(donation => {
-//       const row = document.createElement('tr');
-//       row.innerHTML = `
-//         <td>${donation.campaign}</td>
-//         <td>$${donation.amount}</td>
-//         <td>${new Date(donation.date).toLocaleDateString()}</td>
-//       `;
-//       donationHistory.appendChild(row);
-//     });
-//   } catch (error) {
-//     console.error('Error fetching donation history:', error);
-//   }
-// }
-
 // Event listener for DOMContentLoaded
 document.addEventListener('DOMContentLoaded', async function () {
   const token = getTokenFromCookie();
