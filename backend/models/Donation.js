@@ -1,32 +1,36 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const DonationSchema = new mongoose.Schema({
   donorName: {
     type: String,
-    required: true
+    required: true,
   },
   donorEmail: {
     type: String,
-    required: true
+    required: true,
   },
   amount: {
     type: Number,
-    required: true
+    required: true,
+  },
+  donorPhone: {
+    type: Number,
+    required: true,
   },
   date: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   campaignId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Campaign',
-    required: true
+    ref: "Campaign",
+    required: true,
   },
-  donationFrequency: {
-    type: String,
-    enum: ['One Time', 'Monthly'],
-    required: true
-  }
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
 });
 
-module.exports = mongoose.model('Donation', DonationSchema);
+module.exports = mongoose.model("Donation", DonationSchema);
