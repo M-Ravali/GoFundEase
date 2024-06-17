@@ -35,11 +35,10 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
         // Constructing the image URL from the mediaFiles array
-        const imageUrl = campaign.mediaFiles[0] ? 
-                 `http://localhost:8080/` + campaign.mediaFiles[0].replace(/\\/g, "/") :
-                 'default_image_url.jpg'; // Provide a default image URL or handle accordingly
-
-        // const imageUrl =`http://localhost:8080/` + campaign.mediaFiles[0].replace(/\\/g, "/");
+        const imageUrl = campaign.mediaFiles[0]
+          ? "http://localhost:8080"/ +
+            campaign.mediaFiles[0].replace(/\\/g, "/")
+          : "default_image_url.jpg"; // Provide a default image URL or handle accordingly
 
         const campaignContent = `
           <div class="custom-block-wrap card-height m-3">
@@ -66,7 +65,9 @@ document.addEventListener("DOMContentLoaded", function () {
                   }</p>
                 </div>
               </div>
-              <a href="../donate.html" class="custom-btn btn">Donate Now</a>
+              <a href="../donate.html?campaignId=${
+                campaign._id
+              }" class="custom-btn btn">Donate Now</a>
             </div>
           </div>
         `;
@@ -123,7 +124,7 @@ async function uploadCampaign() {
   if (!token) {
     console.error("No token found, user not authenticated");
     alert("You must be logged in to create a campaign.");
-    window.location.href = '../src/pages/login.html'
+    window.location.href = "../src/pages/login.html";
     return;
   }
 
@@ -132,14 +133,16 @@ async function uploadCampaign() {
       method: "POST",
       body: formData,
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: 'Bearer ${token}',
       },
     });
 
     const result = await response.json();
     if (response.ok) {
       console.log("Campaign uploaded successfully", result);
-      alert("Campaign uploaded successfully. Click on Campaigns menu to check your campaign");
+      alert(
+        "Campaign uploaded successfully. Click on Campaigns menu to check your campaign"
+      );
     } else {
       console.error("Error uploading campaign", result);
       alert("Error uploading campaign: " + result.message);
