@@ -160,7 +160,34 @@
                 >Donate</a
               >
             </li>
-            <li class="nav-item">
+            <li class="nav-item dropdown d-none" id="profileDropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <img
+                  src="assets/images/Useravtar.jpg"
+                  alt="Useravtar"
+                  class="rounded-circle"
+                  width="30"
+                  height="30"
+                />
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a
+                  class="dropdown-item"
+                  href="Profile/profile.html"
+                  >Your Profile</a
+                >
+                <a class="dropdown-item" href="#" id="logoutLink">Logout</a>
+              </div>
+            </li>
+            <li class="nav-item" id="loginButton">
               <a class="nav-link" href="./login.html">Login</a>
             </li>
           </ul>
@@ -306,6 +333,7 @@
       </div>
     </footer>
     <script src="donate.js"></script>
+    <script src="index.js"></script>
 
     <!-- JAVASCRIPT FILES -->
     <script src="../assets/js/jquery.min.js"></script>
