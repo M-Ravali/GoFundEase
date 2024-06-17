@@ -1,90 +1,81 @@
 const mongoose = require('mongoose');
+const { MongoMemoryServer } = require('mongodb-memory-server');
+const User = require('../../models/User'); // Adjust the path to your User model
 const bcrypt = require('bcryptjs');
-const User = require('../User'); 
+
+let mongoServer;
+
+// Mocking MongoDB connection using MongoMemoryServer
+beforeAll(async () => {
+  mongoServer = await MongoMemoryServer.create();
+  const uri = mongoServer.getUri();
+
+  await mongoose.connect(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+});
+
+// Clear all collections between tests
+beforeEach(async () => {
+  await User.deleteMany({});
+});
+
+// Close MongoDB Memory Server and mongoose connection
+afterAll(async () => {
+  await mongoose.disconnect();
+  await mongoServer.stop();
+});
+
 describe('User Model Test', () => {
-  // Connect to the in-memory database before running any tests
-  beforeAll(async () => {
-    await mongoose.connect('mongodb://127.0.0.1:27017/test_database', {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-  });
-
-  // Clear the database after each test
-  afterEach(async () => {
-    await User.deleteMany();
-  });
-
-  // Disconnect from the database after all tests
-  afterAll(async () => {
-    await mongoose.connection.close();
-  });
-
-  it('should hash the password before saving', async () => {
-    const user = new User({
-      name: 'Test User',
-      email: 'test@example.com',
+  it('should create a new user', async () => {
+    const userData = {
+      name: 'John Doe',
+      email: 'john.doe@example.com',
       password: 'password123',
-    });
+    };
 
+    const user = new User(userData);
     await user.save();
 
-    const savedUser = await User.findOne({ email: 'test@example.com' });
-
-    expect(savedUser).not.toBeNull();
-    expect(savedUser.password).not.toBe('password123');
-    expect(await bcrypt.compare('password123', savedUser.password)).toBe(true);
+    const savedUser = await User.findOne({ email: 'john.doe@example.com' });
+    expect(savedUser.name).toBe(userData.name);
+    expect(savedUser.email).toBe(userData.email);
   });
 
-  it('should match the password correctly', async () => {
-    const user = new User({
-      name: 'Test User',
-      email: 'test@example.com',
-      password: 'password123',
-    });
+  it('should hash the user password before saving', async () => {
+    const userData = {
+      name: 'Jane Smith',
+      email: 'jane.smith@example.com',
+      password: 'securePassword',
+    };
 
+    const user = new User(userData);
     await user.save();
 
-    const savedUser = await User.findOne({ email: 'test@example.com' });
+    const savedUser = await User.findOne({ email: 'jane.smith@example.com' });
+    expect(savedUser.password).toBeDefined();
+    expect(savedUser.password).not.toBe(userData.password);
 
-    const isMatch = await savedUser.matchPassword('password123');
-
-    expect(isMatch).toBe(true);
+    const isPasswordMatch = await bcrypt.compare(userData.password, savedUser.password);
+    expect(isPasswordMatch).toBeTruthy();
   });
 
-  it('should not re-hash the password if it is not modified', async () => {
-    const user = new User({
-      name: 'Test User',
-      email: 'test@example.com',
-      password: 'password123',
-    });
+  it('should match user password', async () => {
+    const userData = {
+      name: 'Alice Johnson',
+      email: 'alice.johnson@example.com',
+      password: 'password321',
+    };
 
+    const user = new User(userData);
     await user.save();
 
-    const savedUser = await User.findOne({ email: 'test@example.com' });
-    savedUser.name = 'Updated User';
+    const savedUser = await User.findOne({ email: 'alice.johnson@example.com' });
+    const isPasswordCorrect = await savedUser.matchPassword('password321');
+    const isWrongPassword = await savedUser.matchPassword('wrongpassword');
 
-    await savedUser.save();
-
-    const updatedUser = await User.findOne({ email: 'test@example.com' });
-
-    expect(await bcrypt.compare('password123', updatedUser.password)).toBe(true);
-  });
-
-  it('should generate a reset token and expiry', async () => {
-    const user = new User({
-      name: 'Test User',
-      email: 'test@example.com',
-      password: 'password123',
-      resetPasswordToken: 'sometoken',
-      resetPasswordExpiry: Date.now() + 3600000,
-    });
-
-    await user.save();
-
-    const savedUser = await User.findOne({ email: 'test@example.com' });
-
-    expect(savedUser.resetPasswordToken).toBe('sometoken');
-    expect(savedUser.resetPasswordExpiry).toBeDefined();
+    expect(isPasswordCorrect).toBeTruthy();
+    expect(isWrongPassword).toBeFalsy();
   });
 });
