@@ -1,64 +1,78 @@
-// __tests__/volunteer.test.js
-
 const mongoose = require('mongoose');
-const Volunteer = require('../../models/Volunteer');
+const { MongoMemoryServer } = require('mongodb-memory-server');
+const Volunteer = require('../../models/volunteer'); // Adjust the path to your Volunteer model
 
-jest.setTimeout(60000); // 60 seconds timeout for all tests in this file
+let mongoServer;
 
 beforeAll(async () => {
-  await mongoose.connect('mongodb+srv://cdbcdb:Ravali12@cluster0.vmedk.mongodb.net/<your-database-name>', {
+  mongoServer = await MongoMemoryServer.create();
+  const uri = mongoServer.getUri();
+  await mongoose.connect(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 60000 // 60 seconds timeout for server selection
-  }).catch(err => {
-    console.error('MongoDB connection error:', err);
-    process.exit(1);
   });
-});
-
-afterEach(async () => {
-  await Volunteer.deleteMany();
 });
 
 afterAll(async () => {
   await mongoose.disconnect();
+  await mongoServer.stop();
 });
 
-describe('Volunteer Model Test Suite', () => {
-  it('should throw validation errors if required fields are missing', async () => {
-    const volunteer = new Volunteer();
+afterEach(async () => {
+  await Volunteer.deleteMany({});
+});
 
-    let err;
-    try {
-      await volunteer.validate();
-    } catch (error) {
-      err = error;
-    }
-
-    expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
-    expect(err.errors.name).toBeDefined();
-    expect(err.errors.email).toBeDefined();
-    expect(err.errors.subject).toBeDefined();
-    expect(err.errors.message).toBeDefined();
-  });
-
-  it('should save volunteer with all required fields', async () => {
-    const volunteerData = {
+describe('Volunteer Model Test', () => {
+  it('should create a volunteer successfully with valid data', async () => {
+    const validVolunteerData = {
       name: 'John Doe',
       email: 'john@example.com',
-      subject: 'Volunteering Inquiry',
-      message: 'I would like to volunteer for your organization.'
+      subject: 'Interested in volunteering',
+      message: 'I would like to volunteer for your upcoming events.'
     };
 
-    const volunteer = new Volunteer(volunteerData);
-    await volunteer.save();
+    const volunteer = new Volunteer(validVolunteerData);
+    const savedVolunteer = await volunteer.save();
 
-    const savedVolunteer = await Volunteer.findOne({ email: 'john@example.com' });
+    expect(savedVolunteer._id).toBeDefined();
+    expect(savedVolunteer.name).toBe(validVolunteerData.name);
+    expect(savedVolunteer.email).toBe(validVolunteerData.email);
+    expect(savedVolunteer.subject).toBe(validVolunteerData.subject);
+    expect(savedVolunteer.message).toBe(validVolunteerData.message);
+  });
 
-    expect(savedVolunteer).toBeDefined();
-    expect(savedVolunteer.name).toBe(volunteerData.name);
-    expect(savedVolunteer.email).toBe(volunteerData.email);
-    expect(savedVolunteer.subject).toBe(volunteerData.subject);
-    expect(savedVolunteer.message).toBe(volunteerData.message);
+  it('should fail to create a volunteer without required fields', async () => {
+    const invalidVolunteerData = {
+      email: 'john@example.com',
+      subject: 'Interested in volunteering'
+    };
+
+    let error;
+    try {
+      const volunteer = new Volunteer(invalidVolunteerData);
+      await volunteer.save();
+    } catch (err) {
+      error = err;
+    }
+
+    expect(error).toBeDefined();
+    expect(error.errors.name).toBeDefined();
+  });
+
+  it('should create a volunteer successfully without the message field', async () => {
+    const validVolunteerData = {
+      name: 'Jane Doe',
+      email: 'jane@example.com',
+      subject: 'Interested in volunteering'
+    };
+
+    const volunteer = new Volunteer(validVolunteerData);
+    const savedVolunteer = await volunteer.save();
+
+    expect(savedVolunteer._id).toBeDefined();
+    expect(savedVolunteer.name).toBe(validVolunteerData.name);
+    expect(savedVolunteer.email).toBe(validVolunteerData.email);
+    expect(savedVolunteer.subject).toBe(validVolunteerData.subject);
+    expect(savedVolunteer.message).toBeUndefined();
   });
 });

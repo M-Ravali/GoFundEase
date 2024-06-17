@@ -1,92 +1,125 @@
-// __tests__/donation.test.js
-
 const mongoose = require('mongoose');
-const Donation = require('../../models/Donation');
+const { MongoMemoryServer } = require('mongodb-memory-server');
+const Donation = require('../../models/Donation'); // Adjust the path to your Donation model
 
-jest.setTimeout(60000); // 60 seconds timeout for all tests in this file
+let mongoServer;
 
 beforeAll(async () => {
-  await mongoose.connect('mongodb+srv://cdbcdb:Ravali12@cluster0.vmedk.mongodb.net/<your-database-name>', {
+  mongoServer = await MongoMemoryServer.create();
+  const uri = mongoServer.getUri();
+  await mongoose.connect(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 60000 // 60 seconds timeout for server selection
-  }).catch(err => {
-    console.error('MongoDB connection error:', err);
-    process.exit(1);
   });
-});
-
-afterEach(async () => {
-  await Donation.deleteMany();
 });
 
 afterAll(async () => {
   await mongoose.disconnect();
+  await mongoServer.stop();
 });
 
-describe('Donation Model Test Suite', () => {
-  it('should throw validation errors if required fields are missing', async () => {
-    const donation = new Donation();
-
-    let err;
-    try {
-      await donation.validate();
-    } catch (error) {
-      err = error;
-    }
-
-    expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
-    expect(err.errors.name).toBeDefined();
-    expect(err.errors.email).toBeDefined();
-    expect(err.errors.amount).toBeDefined();
-    expect(err.errors.frequency).toBeDefined();
+describe('Donation Model', () => {
+  beforeEach(async () => {
+    await Donation.deleteMany({});
   });
 
-  it('should default date to current date if not provided', async () => {
-    const donation = new Donation({
-      name: 'John Doe',
-      email: 'john@example.com',
-      amount: 50,
-      frequency: 'One Time'
-    });
-
-    await donation.save();
-
-    expect(donation.date).toBeDefined();
-    expect(donation.date).toBeInstanceOf(Date);
-  });
-
-  it('should store donation with valid frequency', async () => {
-    const donation = new Donation({
-      name: 'Jane Smith',
-      email: 'jane@example.com',
+  test('should create a new donation', async () => {
+    const donationData = {
+      donorName: 'John Doe',
+      donorEmail: 'john.doe@example.com',
       amount: 100,
-      frequency: 'Monthly'
-    });
+      donorPhone: 1234567890,
+      campaignId: new mongoose.Types.ObjectId(),
+      userId: new mongoose.Types.ObjectId(),
+    };
 
-    await donation.save();
+    const donation = new Donation(donationData);
+    const savedDonation = await donation.save();
 
-    const savedDonation = await Donation.findOne({ email: 'jane@example.com' });
-
-    expect(savedDonation.frequency).toBe('Monthly');
+    expect(savedDonation._id).toBeDefined();
+    expect(savedDonation.donorName).toBe(donationData.donorName);
+    expect(savedDonation.donorEmail).toBe(donationData.donorEmail);
+    expect(savedDonation.amount).toBe(donationData.amount);
+    expect(savedDonation.donorPhone).toBe(donationData.donorPhone);
+    expect(savedDonation.campaignId.toString()).toBe(donationData.campaignId.toString());
+    expect(savedDonation.userId.toString()).toBe(donationData.userId.toString());
   });
 
-  it('should not store donation with invalid frequency', async () => {
-    const donation = new Donation({
-      name: 'Invalid Donation',
-      email: 'invalid@example.com',
-      amount: 200,
-      frequency: 'Yearly' // Not a valid frequency
+  test('should validate required fields', async () => {
+    const donationData = new Donation({
+      donorEmail: 'john.doe@example.com',
+      amount: 100,
+      donorPhone: 1234567890,
+      campaignId: new mongoose.Types.ObjectId(),
+      userId: new mongoose.Types.ObjectId(),
     });
 
-    let err;
     try {
-      await donation.validate();
+      await donationData.save();
     } catch (error) {
-      err = error;
+      expect(error.errors.donorName).toBeDefined();
     }
+  });
 
-    expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
-    expect(err.errors.frequency).toBeDefined();
+  test('should not allow negative donation amount', async () => {
+    const donationData = {
+      donorName: 'John Doe',
+      donorEmail: 'john.doe@example.com',
+      amount: -100,
+      donorPhone: 1234567890,
+      campaignId: new mongoose.Types.ObjectId(),
+      userId: new mongoose.Types.ObjectId(),
+    };
+
+    const donation = new Donation(donationData);
+    try {
+      await donation.save();
+    } catch (error) {
+      expect(error.errors.amount).toBeDefined();
+      expect(error.errors.amount.message).toBe('Path `amount` (-100) is less than minimum allowed value (0).');
+    }
+  });
+
+  test('should update a donation', async () => {
+    const donationData = {
+      donorName: 'John Doe',
+      donorEmail: 'john.doe@example.com',
+      amount: 100,
+      donorPhone: 1234567890,
+      campaignId: new mongoose.Types.ObjectId(),
+      userId: new mongoose.Types.ObjectId(),
+    };
+
+    const donation = new Donation(donationData);
+    const savedDonation = await donation.save();
+
+    const updatedData = {
+      donorName: 'Jane Doe',
+      amount: 200,
+    };
+
+    const updatedDonation = await Donation.findByIdAndUpdate(savedDonation._id, updatedData, { new: true });
+
+    expect(updatedDonation.donorName).toBe(updatedData.donorName);
+    expect(updatedDonation.amount).toBe(updatedData.amount);
+  });
+
+  test('should delete a donation', async () => {
+    const donationData = {
+      donorName: 'John Doe',
+      donorEmail: 'john.doe@example.com',
+      amount: 100,
+      donorPhone: 1234567890,
+      campaignId: new mongoose.Types.ObjectId(),
+      userId: new mongoose.Types.ObjectId(),
+    };
+
+    const donation = new Donation(donationData);
+    const savedDonation = await donation.save();
+
+    await Donation.findByIdAndDelete(savedDonation._id);
+    const deletedDonation = await Donation.findById(savedDonation._id);
+
+    expect(deletedDonation).toBeNull();
   });
 });

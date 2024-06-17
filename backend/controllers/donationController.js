@@ -54,3 +54,16 @@ exports.createDonation = async (req, res) => {
     res.status(500).json({ message: "Server error", error });
   }
 };
+
+
+// donationController.js
+
+
+exports.getUserDonations = async (req, res) => {
+  try {
+    const donations = await Donation.find({ userId: req.user.id });
+    res.json({ donations });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }  
+};

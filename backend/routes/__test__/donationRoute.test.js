@@ -1,42 +1,73 @@
 const request = require('supertest');
 const express = require('express');
-const router = require('../donation'); // Adjust the path as per your project structure
-const donationController = require('../../controllers/DonationController'); // Adjust the path as per your project structure
-
-jest.mock('../../controllers/DonationController', () => ({
-  createDonation: jest.fn(),
-}));
+const mongoose = require('mongoose');
+const { MongoMemoryServer } = require('mongodb-memory-server');
+const donationRouter = require('../donation'); // Adjust the path to your donationRoutes
+const protect = require('../../middlewares/authMiddleware'); // Adjust the path to your authMiddleware
+const { createDonation, getUserDonations } = require('../../controllers/donationController'); // Adjust the path to your donationController
 
 const app = express();
 app.use(express.json());
-app.use('/', router);
+app.use('/api/donation', donationRouter);
+
+jest.mock('../../middlewares/authMiddleware', () => jest.fn((req, res, next) => {
+  req.user = { id: 'mockUserId' }; // Use a mock user ID
+  next();
+}));
+
+jest.mock('../../controllers/donationController', () => ({
+  createDonation: jest.fn((req, res) => res.status(201).json({ success: true })),
+  getUserDonations: jest.fn((req, res) => res.status(200).json([]))
+}));
+
+let mongoServer;
+
+beforeAll(async () => {
+  mongoServer = await MongoMemoryServer.create();
+  const uri = mongoServer.getUri();
+  await mongoose.connect(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+});
+
+afterAll(async () => {
+  await mongoose.disconnect();
+  await mongoServer.stop();
+});
 
 describe('Donation Routes', () => {
-  afterEach(() => {
+  beforeEach(async () => {
     jest.clearAllMocks();
   });
 
-  describe('POST /donate', () => {
-    it('should create a new donation', async () => {
-      const donationData = {
-        amount: 100,
-        donorName: 'John Doe',
-        email: 'john.doe@example.com',
-      };
+  test('should create a new donation', async () => {
+    const donationData = {
+      donorName: 'John Doe',
+      donorEmail: 'john@example.com',
+      amount: 100,
+      donorPhone: '1234567890',
+      campaignId: new mongoose.Types.ObjectId() // Mock campaign ID for testing
+    };
 
-      const mockDonationId = 'abc123'; // Mock donation ID returned by controller
+    const response = await request(app)
+      .post('/api/donation/donate')
+      .set('Authorization', 'Bearer mockToken') // Mock the Authorization header
+      .send(donationData)
+      .expect(201);
 
-      donationController.createDonation.mockImplementation((req, res) => {
-        res.status(200).json({ message: 'Donation created successfully', donationId: mockDonationId });
-      });
+    expect(response.body.success).toBe(true);
+    expect(createDonation).toHaveBeenCalled();
+  });
 
-      const response = await request(app)
-        .post('/donate')
-        .send(donationData)
-        .expect(200);
 
-      expect(response.body).toHaveProperty('message', 'Donation created successfully');
-      expect(response.body).toHaveProperty('donationId', mockDonationId);
-    });
+  test('should get user donations', async () => {
+    const response = await request(app)
+      .get('/api/donation/getuserdonations')
+      .set('Authorization', 'Bearer mockToken') // Mock the Authorization header
+      .expect(200);
+
+    expect(response.body).toEqual([]);
+    expect(getUserDonations).toHaveBeenCalled();
   });
 });

@@ -1,85 +1,123 @@
 const mongoose = require('mongoose');
-const Campaign = require('../../models/Campaign');
+const { MongoMemoryServer } = require('mongodb-memory-server');
+const Campaign = require('../../models/Campaign'); // Adjust the path as needed
 
-jest.setTimeout(60000); // 60 seconds timeout for all tests in this file
+let mongoServer;
 
 beforeAll(async () => {
-  await mongoose.connect('mongodb+srv://cdbcdb:Ravali12@cluster0.vmedk.mongodb.net/<your-database-name>', {
+  mongoServer = await MongoMemoryServer.create();
+  const uri = mongoServer.getUri();
+
+  await mongoose.connect(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 60000 // 60 seconds timeout for server selection
-  }).catch(err => {
-    console.error('MongoDB connection error:', err);
-    process.exit(1);
   });
-});
-
-afterEach(async () => {
-  await Campaign.deleteMany();
 });
 
 afterAll(async () => {
   await mongoose.disconnect();
+  await mongoServer.stop();
 });
 
-describe('Campaign Model Test Suite', () => {
-  it('should have default values for currentAmount and createdAt', async () => {
-    const userId = new mongoose.Types.ObjectId(); // Using new to instantiate ObjectId
+beforeEach(async () => {
+  await Campaign.deleteMany({});
+});
 
-    const campaign = new Campaign({
-      title: 'Sample Campaign',
-      description: 'Sample Description',
-      goalAmount: 1000,
-      endDate: new Date(),
-      contactEmail: 'sample@example.com',
-      userId: userId, // Assigning the instantiated ObjectId
+describe('Campaign Model Test', () => {
+  it('should create & save a campaign successfully', async () => {
+    const validCampaign = new Campaign({
+      title: 'Test Campaign',
+      description: 'This is a test campaign',
+      goalAmount: 5000,
+      endDate: new Date('2024-12-31'),
+      contactEmail: 'test@example.com',
+      userId: new mongoose.Types.ObjectId(),
     });
+    const savedCampaign = await validCampaign.save();
 
-    await campaign.save();
-
-    const savedCampaign = await Campaign.findOne({ title: 'Sample Campaign' });
-
-    expect(savedCampaign.currentAmount).toBe(0); // Assuming default value is 0
-    expect(savedCampaign.createdAt).toBeDefined(); // Assuming createdAt is set in the schema or default behavior
+    expect(savedCampaign._id).toBeDefined();
+    expect(savedCampaign.title).toBe('Test Campaign');
+    expect(savedCampaign.description).toBe('This is a test campaign');
+    expect(savedCampaign.goalAmount).toBe(5000);
+    expect(savedCampaign.currentAmount).toBe(0);
+    expect(savedCampaign.endDate).toBeInstanceOf(Date);
+    expect(savedCampaign.contactEmail).toBe('test@example.com');
+    expect(savedCampaign.mediaFiles).toEqual([]);
+    expect(savedCampaign.createdAt).toBeInstanceOf(Date);
   });
 
-  it('should store mediaFiles as an array of strings', async () => {
-    const userId = new mongoose.Types.ObjectId(); // Using new to instantiate ObjectId
+  it('should fail to create a campaign without required fields', async () => {
+    const invalidCampaign = new Campaign({});
+    let err;
+    try {
+      await invalidCampaign.save();
+    } catch (error) {
+      err = error;
+    }
 
-    const campaign = new Campaign({
-      title: 'Sample Campaign',
-      description: 'Sample Description',
-      goalAmount: 1000,
-      endDate: new Date(),
-      contactEmail: 'sample@example.com',
-      userId: userId, // Assigning the instantiated ObjectId
-      mediaFiles: ['path/to/file1.jpg', 'path/to/file2.jpg'],
-    });
-
-    await campaign.save();
-
-    const savedCampaign = await Campaign.findOne({ title: 'Sample Campaign' });
-
-    expect(Array.isArray(savedCampaign.mediaFiles)).toBe(true);
-    expect(typeof savedCampaign.mediaFiles[0]).toBe('string');
+    expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
+    expect(err.errors.title).toBeDefined();
+    expect(err.errors.description).toBeDefined();
+    expect(err.errors.goalAmount).toBeDefined();
+    expect(err.errors.endDate).toBeDefined();
+    expect(err.errors.contactEmail).toBeDefined();
+    expect(err.errors.userId).toBeDefined();
   });
 
-  it('should reference a valid User ObjectId', async () => {
-    const userId = new mongoose.Types.ObjectId(); // Using new to instantiate ObjectId
-
+  it('should update a campaign successfully', async () => {
     const campaign = new Campaign({
-      title: 'Sample Campaign',
-      description: 'Sample Description',
-      goalAmount: 1000,
-      endDate: new Date(),
-      contactEmail: 'sample@example.com',
-      userId: userId, // Assigning the instantiated ObjectId
+      title: 'Test Campaign',
+      description: 'This is a test campaign',
+      goalAmount: 5000,
+      endDate: new Date('2024-12-31'),
+      contactEmail: 'test@example.com',
+      userId: new mongoose.Types.ObjectId(),
     });
+    const savedCampaign = await campaign.save();
 
-    await campaign.save();
+    const updatedData = {
+      title: 'Updated Campaign Title',
+      currentAmount: 1500,
+    };
+    const updatedCampaign = await Campaign.findByIdAndUpdate(
+      savedCampaign._id,
+      updatedData,
+      { new: true }
+    );
 
-    const savedCampaign = await Campaign.findOne({ title: 'Sample Campaign' });
+    expect(updatedCampaign.title).toBe('Updated Campaign Title');
+    expect(updatedCampaign.currentAmount).toBe(1500);
+  });
 
-    expect(mongoose.Types.ObjectId.isValid(savedCampaign.userId)).toBe(true);
+  it('should delete a campaign successfully', async () => {
+    const campaign = new Campaign({
+      title: 'Test Campaign',
+      description: 'This is a test campaign',
+      goalAmount: 5000,
+      endDate: new Date('2024-12-31'),
+      contactEmail: 'test@example.com',
+      userId: new mongoose.Types.ObjectId(),
+    });
+    const savedCampaign = await campaign.save();
+
+    await Campaign.findByIdAndDelete(savedCampaign._id);
+
+    const deletedCampaign = await Campaign.findById(savedCampaign._id);
+    expect(deletedCampaign).toBeNull();
+  });
+
+  it('should validate mediaFiles as an array of strings', async () => {
+    const campaign = new Campaign({
+      title: 'Test Campaign',
+      description: 'This is a test campaign',
+      goalAmount: 5000,
+      endDate: new Date('2024-12-31'),
+      contactEmail: 'test@example.com',
+      userId: new mongoose.Types.ObjectId(),
+      mediaFiles: ['file1.jpg', 'file2.png'],
+    });
+    const savedCampaign = await campaign.save();
+
+    expect(savedCampaign.mediaFiles).toEqual(['file1.jpg', 'file2.png']);
   });
 });

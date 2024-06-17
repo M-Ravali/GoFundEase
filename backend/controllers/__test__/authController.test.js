@@ -25,42 +25,6 @@ jest.mock('nodemailer', () => ({
 
 
 describe('Auth Controller', () => {
-  // describe('registerUser', () => {
-    
-  //   it('should register a new user', async () => {    
-  //     const req = { body: { name: 'Test User', email: 'test@example.com', password: 'password123' } };
-  //     const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
-  //     const mockUser = { _id: 'someid', name: 'Test User', email: 'test@example.com' };
-  //     const createUserSpy = jest.spyOn(User, 'create').mockResolvedValue(mockUser);
-
-  //     await registerUser(req, res);
-
-  //     expect(createUserSpy).toHaveBeenCalledWith({ name: 'Test User', email: 'test@example.com', password: 'password123' });
-  //     expect(res.status).toHaveBeenCalledWith(201);
-  //     expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
-  //       _id: 'someid',
-  //       name: 'Test User',
-  //       email: 'test@example.com',
-  //       token: 'sometoken'
-  //     }));
-
-  //     createUserSpy.mockRestore();
-  //   });
-
-  //   it('should return an error if user already exists', async () => {
-  //     const req = { body: { name: 'Test User', email: 'test@example.com', password: 'password123' } };
-  //     const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
-  //     jest.spyOn(User, 'findOne').mockResolvedValue(true);
-
-  //     await registerUser(req, res);
-
-  //     expect(res.status).toHaveBeenCalledWith(400);
-  //     expect(res.json).toHaveBeenCalledWith({ message: 'User already exists' });
-  //   });
-
-  //   // Add more test cases for validation, error handling, etc.
-  // });
-
   describe('authUser', () => {
     it('should authenticate a user with valid credentials', async () => {
       const req = { body: { email: 'test@example.com', password: 'password123' } };
