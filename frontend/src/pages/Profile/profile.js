@@ -25,39 +25,38 @@ function getTokenFromCookie() {
 
 // Fetch user profile data
 async function fetchUserProfile(token) {
-  const apiEndpoint = 'http://localhost:8080/users/profile';
+  const apiEndpoint = "http://localhost:8080/users/profile";
 
   try {
     const response = await fetch(apiEndpoint, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Authorization': `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     });
     const data = await response.json();
     if (data.message) {
-      console.error('Error:', data.message);
+      console.error("Error:", data.message);
       return;
     }
 
     console.log(data);
 
-    
-    document.getElementById('name').innerText = data.name;
-    document.getElementById('email').innerText = data.email || '';
-    document.getElementById('bio').value = data.bio || '';
+    document.getElementById("name").innerText = data.name;
+    document.getElementById("email").innerText = data.email || "";
+    document.getElementById("bio").value = data.bio || "";
   } catch (error) {
-    console.error('Error fetching user profile:', error);
+    console.error("Error fetching user profile:", error);
   }
 }
 
 // Event listener for DOMContentLoaded
-document.addEventListener('DOMContentLoaded', async function () {
+document.addEventListener("DOMContentLoaded", async function () {
   const token = getTokenFromCookie();
   if (token) {
     await fetchUserProfile(token);
     // await fetchDonationHistory(token);
   } else {
-    console.error('No token found in cookies');
+    console.error("No token found in cookies");
   }
 });

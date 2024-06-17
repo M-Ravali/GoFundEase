@@ -1,28 +1,33 @@
 // Forgot Password Form Submission
-document.getElementById('forgot-password-form').addEventListener('submit', async function(event) {
+document
+  .getElementById("forgot-password-form")
+  .addEventListener("submit", async function (event) {
     event.preventDefault();
 
-    const email = document.getElementById('email').value;
+    const email = document.getElementById("email").value;
 
     try {
-        const response = await fetch("http://localhost:8080/api/auth/request-password-reset", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email: email }),
-        });
-
-        if (response.ok) {
-            alert('Password reset email sent');
-        } else {
-            alert('Failed to send password reset email');
+      const response = await fetch(
+        "http://localhost:8080/api/auth/request-password-reset",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: email }),
         }
+      );
+
+      if (response.ok) {
+        alert("Password reset email sent");
+      } else {
+        alert("Failed to send password reset email");
+      }
     } catch (error) {
-        console.error('Error:', error);
-        alert('Failed to send password reset email');
+      console.error("Error:", error);
+      alert("Failed to send password reset email");
     }
-});
+  });
 
 // Reset Password Form Submission
 // document.getElementById('reset-password-form').addEventListener('submit', async function(event) {

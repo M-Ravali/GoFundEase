@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Constructing the image URL from the mediaFiles array
         const imageUrl = campaign.mediaFiles[0]
-          ? "http://localhost:8080"/ +
+          ? `http://localhost:8080/` +
             campaign.mediaFiles[0].replace(/\\/g, "/")
           : "default_image_url.jpg"; // Provide a default image URL or handle accordingly
 
@@ -105,7 +105,7 @@ async function uploadCampaign() {
   const endDate = document.getElementById("endDate").value;
   const contactEmail = document.getElementById("contactEmail").value;
   const imageUpload = document.getElementById("imageUpload").files[0];
-  const videoUpload = document.getElementById("videoUpload").files[0];
+  F;
 
   const formData = new FormData();
   formData.append("title", campaignName);
@@ -115,9 +115,6 @@ async function uploadCampaign() {
   formData.append("contactEmail", contactEmail);
   if (imageUpload) {
     formData.append("mediaFiles", imageUpload);
-  }
-  if (videoUpload) {
-    formData.append("mediaFiles", videoUpload);
   }
 
   const token = getTokenFromCookie();
@@ -133,7 +130,7 @@ async function uploadCampaign() {
       method: "POST",
       body: formData,
       headers: {
-        Authorization: 'Bearer ${token}',
+        Authorization: `Bearer ${token}`,
       },
     });
 
