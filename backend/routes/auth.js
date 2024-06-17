@@ -21,8 +21,8 @@ router.post("/login", authUser);
 router.post("/request-password-reset", requestPasswordReset);
 router.post("/reset-password/:token", resetPassword);
 
-// router.get("/profile", protect, getUserProfile);
-// router.put("/profile", protect, updateUserProfile);
-// router.get("/donations", protect, getUserDonations);
+/*router.get("/profile", protect, getUserProfile);
+router.put("/profile", protect, updateUserProfile);
+router.get("/donations", protect, getUserDonations);*/
 
 module.exports = router;

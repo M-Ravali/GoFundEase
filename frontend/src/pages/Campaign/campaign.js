@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Constructing the image URL from the mediaFiles array
         const imageUrl = campaign.mediaFiles[0]
-          ? `http://localhost:8080/` +
+          ? "http://localhost:8080"/ +
             campaign.mediaFiles[0].replace(/\\/g, "/")
           : "default_image_url.jpg"; // Provide a default image URL or handle accordingly
 
@@ -133,7 +133,7 @@ async function uploadCampaign() {
       method: "POST",
       body: formData,
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: 'Bearer ${token}',
       },
     });
 
