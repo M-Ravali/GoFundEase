@@ -12,7 +12,7 @@ const {
   getUserProfile,
   updateUserProfile,
 } = require("../controllers/authController");
-const { getUserDonations } = require("../controllers/DonationController");
+const { getUserDonations } = require("../controllers/donationController");
 
 const router = express.Router();
 
