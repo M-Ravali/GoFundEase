@@ -1,14 +1,10 @@
-// __tests__/donation.test.js
-
 const mongoose = require('mongoose');
 const Donation = require('../../models/Donation');
 
 jest.setTimeout(60000); // 60 seconds timeout for all tests in this file
 
 beforeAll(async () => {
-  await mongoose.connect('mongodb+srv://cdbcdb:Ravali12@cluster0.vmedk.mongodb.net/<your-database-name>', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+  await mongoose.connect('mongodb+srv://cdbcdb:Ravali12@cluster0.vmedk.mongodb.net/gofundease_db', {
     serverSelectionTimeoutMS: 60000 // 60 seconds timeout for server selection
   }).catch(err => {
     console.error('MongoDB connection error:', err);
@@ -36,18 +32,22 @@ describe('Donation Model Test Suite', () => {
     }
 
     expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
-    expect(err.errors.name).toBeDefined();
-    expect(err.errors.email).toBeDefined();
+    expect(err.errors.donorName).toBeDefined();
+    expect(err.errors.donorEmail).toBeDefined();
     expect(err.errors.amount).toBeDefined();
-    expect(err.errors.frequency).toBeDefined();
+    expect(err.errors.donorPhone).toBeDefined();
+    expect(err.errors.campaignId).toBeDefined();
+    expect(err.errors.userId).toBeDefined();
   });
 
   it('should default date to current date if not provided', async () => {
     const donation = new Donation({
-      name: 'John Doe',
-      email: 'john@example.com',
+      donorName: 'John Doe',
+      donorEmail: 'john@example.com',
       amount: 50,
-      frequency: 'One Time'
+      donorPhone: 1234567890,
+      campaignId: new mongoose.Types.ObjectId(), // Provide a valid ObjectId
+      userId: new mongoose.Types.ObjectId()
     });
 
     await donation.save();
@@ -56,27 +56,35 @@ describe('Donation Model Test Suite', () => {
     expect(donation.date).toBeInstanceOf(Date);
   });
 
-  it('should store donation with valid frequency', async () => {
+  it('should store donation with valid data', async () => {
     const donation = new Donation({
-      name: 'Jane Smith',
-      email: 'jane@example.com',
+      donorName: 'Jane Smith',
+      donorEmail: 'jane@example.com',
       amount: 100,
-      frequency: 'Monthly'
+      donorPhone: 1234567890,
+      campaignId: new mongoose.Types.ObjectId(), // Provide a valid ObjectId
+      userId: new mongoose.Types.ObjectId()
     });
 
     await donation.save();
 
-    const savedDonation = await Donation.findOne({ email: 'jane@example.com' });
+    const savedDonation = await Donation.findOne({ donorEmail: 'jane@example.com' });
 
-    expect(savedDonation.frequency).toBe('Monthly');
+    expect(savedDonation).toBeDefined();
+    expect(savedDonation.donorName).toBe('Jane Smith');
+    expect(savedDonation.donorEmail).toBe('jane@example.com');
+    expect(savedDonation.amount).toBe(100);
+    expect(savedDonation.donorPhone).toBe(1234567890);
   });
 
-  it('should not store donation with invalid frequency', async () => {
+  it('should not store donation with missing required fields', async () => {
     const donation = new Donation({
-      name: 'Invalid Donation',
-      email: 'invalid@example.com',
+      donorName: 'Invalid Donation',
+      donorEmail: 'invalid@example.com',
       amount: 200,
-      frequency: 'Yearly' // Not a valid frequency
+      donorPhone: 1234567890,
+      // campaignId is missing
+      userId: new mongoose.Types.ObjectId()
     });
 
     let err;
@@ -87,6 +95,6 @@ describe('Donation Model Test Suite', () => {
     }
 
     expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
-    expect(err.errors.frequency).toBeDefined();
+    expect(err.errors.campaignId).toBeDefined();
   });
 });

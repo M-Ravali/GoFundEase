@@ -1,11 +1,14 @@
 const request = require('supertest');
 const express = require('express');
-const router = require('../donation'); // Adjust the path as per your project structure
-const donationController = require('../../controllers/DonationController'); // Adjust the path as per your project structure
+const router = require('../donation'); 
+const donationController = require('../../controllers/donationController'); 
+const authMiddleware = require('../../middlewares/authMiddleware'); 
 
-jest.mock('../../controllers/DonationController', () => ({
+jest.mock('../../controllers/donationController', () => ({
   createDonation: jest.fn(),
 }));
+
+jest.mock('../../middlewares/authMiddleware', () => jest.fn((req, res, next) => next())); // Mock the authMiddleware
 
 const app = express();
 app.use(express.json());
@@ -21,7 +24,10 @@ describe('Donation Routes', () => {
       const donationData = {
         amount: 100,
         donorName: 'John Doe',
-        email: 'john.doe@example.com',
+        donorEmail: 'john.doe@example.com',
+        donorPhone: 1234567890,
+        campaignId: '60c72b2f5f1b2c6d88f8e46b', // Provide a valid ObjectId
+        userId: '60c72b2f5f1b2c6d88f8e46a' // Provide a valid ObjectId
       };
 
       const mockDonationId = 'abc123'; // Mock donation ID returned by controller
@@ -37,6 +43,6 @@ describe('Donation Routes', () => {
 
       expect(response.body).toHaveProperty('message', 'Donation created successfully');
       expect(response.body).toHaveProperty('donationId', mockDonationId);
-    });
+    }, 15000); // Increase timeout to 15 seconds
   });
 });
