@@ -10,7 +10,7 @@ console.log(token);
 
 if (!token) {
   alert("Invalid or missing token");
-  window.location.href = "/login.html"; // Redirect to login if no token found
+  window.location.href = "http://127.0.0.1:5500/frontend/src/pages/login.html"; // Redirect to login if no token found
 }
 
 // Reset Password Form Submission
@@ -41,7 +41,7 @@ document
 
       if (response.ok) {
         alert("Password reset successful");
-        window.location.href = "/login.html"; // Redirect to login page after successful reset
+        window.location.href = "http://127.0.0.1:5500/frontend/src/pages/login.html"; // Redirect to login page after successful reset
       } else {
         const data = await response.json();
         alert(data.message || "Failed to reset password");

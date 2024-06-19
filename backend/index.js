@@ -37,7 +37,7 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 app.get('/reset-password/:token', (req, res) => {
   const token = req.params.token;
   // Render the reset password page, passing the token if necessary
-  res.sendFile(path.join(__dirname, '../frontend', 'helper', 'charity', 'resetpassword.html'));
+  res.sendFile(path.join(__dirname, '../frontend', 'src', 'pages', 'ResetPassword', 'resetpassword.html'));
 });
 
 

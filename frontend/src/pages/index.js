@@ -65,5 +65,5 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
   }
 
-  await checkAuthStatus(); // Ensure initial check on page load
+  // await checkAuthStatus(); // Ensure initial check on page load
 });

@@ -105,7 +105,6 @@ async function uploadCampaign() {
   const endDate = document.getElementById("endDate").value;
   const contactEmail = document.getElementById("contactEmail").value;
   const imageUpload = document.getElementById("imageUpload").files[0];
-  F;
 
   const formData = new FormData();
   formData.append("title", campaignName);
